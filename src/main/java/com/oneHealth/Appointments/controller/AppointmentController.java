@@ -37,7 +37,12 @@ public class AppointmentController
 	private AppointmentService service;
 	
 	
-	// Save appointment details to the database.
+	/**
+	 * Retrieves the list of appointments for a specific patient with the given patient ID.
+	 *
+	 * @param patientId The ID of the patient for whom to retrieve the appointments.
+	 * @return ResponseEntity<List<Appointment>> A response containing the list of appointments with HTTP status 200 (OK).
+	 */
 	@PostMapping("/saveappointment")
 	public ResponseEntity<String> saveAppointmentDetails(@RequestBody Appointment appointment)
 	{
@@ -45,7 +50,14 @@ public class AppointmentController
 		return new ResponseEntity<>("Appointment Saved Successfully",HttpStatus.OK);
 	}
 	
-	// Find an appointment based on the patient ID
+	
+	
+	/**
+	 * Retrieves the list of appointments for a specific patient with the given patient ID.
+	 *
+	 * @param patientId The ID of the patient for whom to retrieve the appointments.
+	 * @return ResponseEntity<List<Appointment>> A response containing the list of appointments with HTTP status 200 (OK).
+	 */
 	@GetMapping("/findbypatientid/{id}")
 	public ResponseEntity<List<Appointment>> findByPatientId(@PathVariable(value="id") long patientId)
 	{
@@ -54,7 +66,14 @@ public class AppointmentController
 	}
 	
 	
-	// Find an appointment based on the doctor ID
+	
+	
+	/**
+	 * Retrieves the list of appointments for a specific doctor with the given doctor ID.
+	 *
+	 * @param doctorId The ID of the doctor for whom to retrieve the appointments.
+	 * @return ResponseEntity<List<Appointment>> A response containing the list of appointments with HTTP status 200 (OK).
+	 */
 	@GetMapping("/findbydoctorid/{id}")
 	public ResponseEntity<List<Appointment>> findByDoctorId(@PathVariable(value="id") long doctorId)
 	{
@@ -63,7 +82,13 @@ public class AppointmentController
 	}
 	
 	
-	// Find an appointment based on the doctor ID as well as the appointment status
+	/**
+	 * Retrieves the list of appointments for a specific doctor with the given doctor ID and status.
+	 *
+	 * @param doctorId The ID of the doctor for whom to retrieve the appointments.
+	 * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+	 * @return ResponseEntity<List<Appointment>> A response containing the list of appointments with HTTP status 200 (OK) if found, or HTTP status 204 (NO_CONTENT) if no appointments are found.
+	 */
 	@GetMapping("/doctor/{doctorId}/status/{status}")
     public ResponseEntity<List<Appointment>> getAppointmentsByDoctorIdAndStatus(
             @PathVariable("doctorId") long doctorId,
@@ -78,7 +103,13 @@ public class AppointmentController
         }
     }
 	
-	// Get appointments by patient ID and type.
+	/**
+	 * Retrieves the list of appointments for a specific patient with the given patient ID and type.
+	 *
+	 * @param patientId The ID of the patient for whom to retrieve the appointments.
+	 * @param type The type of appointments to retrieve (e.g., "checkup", "follow-up", etc.).
+	 * @return ResponseEntity<List<Appointment>> A response containing the list of appointments with HTTP status 200 (OK) if found, or HTTP status 204 (NO_CONTENT) if no appointments are found.
+	 */
 	@GetMapping("/patient/{patientId}/type/{type}")
 	public ResponseEntity<List<Appointment>> getAppointmentsByPatientIdAndType(@PathVariable("patientId") long patientId,
             @PathVariable("type") String type)
@@ -93,7 +124,14 @@ public class AppointmentController
 	}
 	
 	
-	// Update the status of an appointment.
+	/**
+	 * Updates the status of an appointment with the given appointment ID.
+	 *
+	 * @param appointment_id The ID of the appointment to be updated.
+	 * @param status The new status for the appointment.
+	 * @return ResponseEntity<String> A response indicating that the appointment status has been updated successfully.
+	 * @throws ProfileNotFoundException If no appointment is found with the given ID.
+	 */
 	@PutMapping("updateappointment/{appointment_id}/update/{status}")
 	public ResponseEntity<String> updateAppointmentStatus(@PathVariable("appointment_id") long appointment_id , @PathVariable("status") String status) throws ProfileNotFoundException
 	{
@@ -102,7 +140,15 @@ public class AppointmentController
 	}
 	
 	
-	// Update the date and time of an appointment.
+	/**
+	 * Updates the date and time of an appointment with the given appointment ID.
+	 *
+	 * @param appointment_id The ID of the appointment to be updated.
+	 * @param newDate The new date for the appointment.
+	 * @param newTime The new time for the appointment.
+	 * @return ResponseEntity<String> A response indicating that the appointment date and time have been updated successfully.
+	 * @throws RecordNotFoundException If no appointment is found with the given ID.
+	 */
 	@PutMapping("/update-date-time/{id}")
 	public ResponseEntity<String> updateAppointmentDateTime(
 	        @PathVariable(value = "id") long appointment_id,
@@ -114,7 +160,13 @@ public class AppointmentController
 	}
 	
 	
-	// Delete an appointment by its ID.
+	/**
+	 * Deletes an appointment with the given appointment ID.
+	 *
+	 * @param appointment_id The ID of the appointment to be deleted.
+	 * @return ResponseEntity<String> A response indicating that the appointment has been deleted successfully.
+	 * @throws RecordNotFoundException If no appointment is found with the given ID.
+	 */
 	@DeleteMapping("/delete-appointment/{id}")
 	public ResponseEntity<String> deleteAppointment(@PathVariable(value = "id") long appointment_id) throws RecordNotFoundException {
 	    service.deleteAppointment(appointment_id);
@@ -124,7 +176,11 @@ public class AppointmentController
 	
 	
 	
-	
+	/**
+	 * Retrieves all the appointments scheduled for today's date.
+	 *
+	 * @return ResponseEntity<List<Appointment>> The list of appointments scheduled for today's date.
+	 */
 	@GetMapping("/appointments-for-today")
 	public ResponseEntity<List<Appointment>> getAppointmentsForToday() {
 	    // Retrieve and return appointments for today's date from the service layer.
@@ -143,7 +199,11 @@ public class AppointmentController
 	
 	
 	
-	
+	/**
+	 * Retrieves all the upcoming appointments with a specific status.
+	 *
+	 * @return ResponseEntity<List<Appointment>> The list of upcoming appointments with the specified status.
+	 */
 	@GetMapping("/upcoming")
 	public ResponseEntity<List<Appointment>> getUpcomingAppointmentsWithStatus() {
 	    String status = "Accepted";
@@ -155,7 +215,13 @@ public class AppointmentController
 	
 	
 	
-	
+	/**
+	 * Retrieves all the upcoming appointments with a specific status for a particular doctor based on the doctorId.
+	 *
+	 * @param doctorId The ID of the doctor for whom upcoming appointments need to be fetched.
+	 * @return ResponseEntity<List<Appointment>> The list of upcoming appointments for the specified doctor.
+	 * @throws RecordNotFoundException If no upcoming appointments are found for the given doctor and status.
+	 */
 	@GetMapping("/upcoming-appointments/doctor/{doctorId}")
 	public ResponseEntity<List<Appointment>> getUpcomingAppointmentsByDoctorIdAndStatus(
 	        @PathVariable long doctorId) throws RecordNotFoundException 
@@ -168,7 +234,14 @@ public class AppointmentController
 
 	
 	
-	
+	/**
+	 * Retrieves all the upcoming appointments with a specific status and type for a particular doctor based on the doctorId and type.
+	 *
+	 * @param doctorId The ID of the doctor for whom upcoming appointments need to be fetched.
+	 * @param type     The type of appointment for which upcoming appointments need to be fetched.
+	 * @return ResponseEntity<List<Appointment>> The list of upcoming appointments for the specified doctor and type.
+	 * @throws RecordNotFoundException If no upcoming appointments are found for the given doctor, status, and type.
+	 */
 	@GetMapping("/upcoming-appointments/doctor/{doctorId}/type/{type}")
 	public ResponseEntity<List<Appointment>> getUpcomingAppointmentsByDoctorIdAndStatusAndType(
 	        @PathVariable long doctorId,
@@ -179,5 +252,29 @@ public class AppointmentController
 	    List<Appointment> upcomingAppointments = service.getUpcomingAppointmentsByDoctorIdAndStatusAndType(doctorId, status, type);
 	    return ResponseEntity.ok(upcomingAppointments);
 	}
+	
+	
+	
+	/**
+	 * Retrieves all the appointments scheduled for today for a specific doctor based on the doctorId.
+	 *
+	 * @param doctorId The ID of the doctor for whom appointments need to be fetched.
+	 * @return ResponseEntity<List<Appointment>> The list of appointments for today.
+	 * @throws RecordNotFoundException If no appointments are found for the given doctor and status.
+	 */
+	@GetMapping("/appointments-for-today/doctor/{doctorId}")
+    public ResponseEntity<List<Appointment>> getAppointmentsForTodayByDoctorIdAndStatus(
+            @PathVariable long doctorId) throws RecordNotFoundException 
+	{
+
+		String status = "Accepted";
+        List<Appointment> todayAppointments = service.getAppointmentsForTodayByDoctorIdAndStatus(doctorId, status);
+
+        if (todayAppointments.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 (NO_CONTENT) if no appointments found for today.
+        } else {
+            return ResponseEntity.ok(todayAppointments); // Return appointments with status 200 (OK).
+        }
+    }
 
 }

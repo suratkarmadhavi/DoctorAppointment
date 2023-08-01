@@ -93,5 +93,8 @@ public interface AppointmentService
      */
     List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String status, String type) throws RecordNotFoundException;
 
+    
+    List<Appointment> getAppointmentsForTodayByDoctorIdAndStatus(long doctorId, String status) throws RecordNotFoundException;
+
 }
 

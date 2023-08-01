@@ -152,6 +152,22 @@ public class AppointmentServiceImplementation implements AppointmentService
         return upcomingAppointments;
     }
 
+
+	@Override
+	public List<Appointment> getAppointmentsForTodayByDoctorIdAndStatus(long doctorId, String status)
+			throws RecordNotFoundException {
+		LocalDate currentDate = LocalDate.now();
+
+        // Call the custom repository method to fetch appointments for today by doctorId and status
+        List<Appointment> todayAppointments = repo.findByDateAndDoctorIdAndStatus(currentDate, doctorId, status);
+
+        if (todayAppointments.isEmpty()) {
+        	throw new RecordNotFoundException("No today's appointments found for Doctor ID: " + doctorId);
+        }
+
+        return todayAppointments;
+	}
+
 	
 
 	
