@@ -55,5 +55,43 @@ public interface AppointmentService
      * Delete an appointment by appointment ID.
      */
     void deleteAppointment(long appointmentId) throws RecordNotFoundException;
+    
+    
+    /**
+     * Retrieves a list of appointments scheduled for today.
+     *
+     * @return List of Appointment objects scheduled for today.
+     */
+    List<Appointment> getAppointmentsForToday();
+
+    /**
+     * Retrieves a list of upcoming appointments with a specific status.
+     *
+     * @param status The status of the appointments to retrieve.
+     * @return List of Appointment objects with the specified status.
+     */
+    List<Appointment> getUpcomingAppointmentsWithStatus(String status);
+
+    /**
+     * Retrieves a list of upcoming appointments for a specific doctor with a given status.
+     *
+     * @param doctorId The ID of the doctor.
+     * @param status   The status of the appointments to retrieve.
+     * @return List of Appointment objects for the specified doctor and status.
+     * @throws RecordNotFoundException if no upcoming appointments found for the doctor and status.
+     */
+    List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatus(long doctorId, String status) throws RecordNotFoundException;
+
+    /**
+     * Retrieves a list of upcoming appointments for a specific doctor with a given status and type.
+     *
+     * @param doctorId The ID of the doctor.
+     * @param status   The status of the appointments to retrieve.
+     * @param type     The type of the appointments to retrieve.
+     * @return List of Appointment objects for the specified doctor, status, and type.
+     * @throws RecordNotFoundException if no upcoming appointments found for the doctor, status, and type.
+     */
+    List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String status, String type) throws RecordNotFoundException;
+
 }
 

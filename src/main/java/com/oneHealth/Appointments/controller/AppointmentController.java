@@ -120,4 +120,64 @@ public class AppointmentController
 	    service.deleteAppointment(appointment_id);
 	    return new ResponseEntity<>("Appointment Deleted Successfully", HttpStatus.OK);
 	}
+	
+	
+	
+	
+	
+	@GetMapping("/appointments-for-today")
+	public ResponseEntity<List<Appointment>> getAppointmentsForToday() {
+	    // Retrieve and return appointments for today's date from the service layer.
+	    List<Appointment> appointments = service.getAppointmentsForToday();
+	    
+	    if (appointments.isEmpty()) {
+	        // If no appointments found for today, return a response with HTTP status 204 (NO_CONTENT).
+	        // The 204 status code indicates that the server successfully processed the request but there is no content to send in the response.
+	        return ResponseEntity.noContent().build();
+	    } else {
+	        // If appointments found, return the list of appointments in the response with HTTP status 200 (OK).
+	        return ResponseEntity.ok(appointments);
+	    }
+	}
+
+	
+	
+	
+	
+	@GetMapping("/upcoming")
+	public ResponseEntity<List<Appointment>> getUpcomingAppointmentsWithStatus() {
+	    String status = "Accepted";
+	    // Retrieve and return upcoming appointments with status "Accepted" from the service layer.
+	    List<Appointment> upcomingAppointments = service.getUpcomingAppointmentsWithStatus(status);
+	    return ResponseEntity.ok(upcomingAppointments);
+	}
+
+	
+	
+	
+	
+	@GetMapping("/upcoming-appointments/doctor/{doctorId}")
+	public ResponseEntity<List<Appointment>> getUpcomingAppointmentsByDoctorIdAndStatus(
+	        @PathVariable long doctorId) throws RecordNotFoundException 
+	{
+	    String status = "Accepted";
+	    // Retrieve and return upcoming appointments with status "Accepted" for a specific doctor by doctorId from the service layer.
+	    List<Appointment> upcomingAppointments = service.getUpcomingAppointmentsByDoctorIdAndStatus(doctorId, status);
+	    return ResponseEntity.ok(upcomingAppointments);
+	}
+
+	
+	
+	
+	@GetMapping("/upcoming-appointments/doctor/{doctorId}/type/{type}")
+	public ResponseEntity<List<Appointment>> getUpcomingAppointmentsByDoctorIdAndStatusAndType(
+	        @PathVariable long doctorId,
+	        @PathVariable String type) throws RecordNotFoundException 
+	{
+	    String status = "Accepted";
+	    // Retrieve and return upcoming appointments with status "Accepted" and a specific type for a specific doctor by doctorId from the service layer.
+	    List<Appointment> upcomingAppointments = service.getUpcomingAppointmentsByDoctorIdAndStatusAndType(doctorId, status, type);
+	    return ResponseEntity.ok(upcomingAppointments);
+	}
+
 }

@@ -28,7 +28,7 @@ public class Appointment
 	private String gender;
 	private String description;
 	private Date date;
-	private Time appointment_time;
+	private Time appointmentTime;
 	private String status;
 	private String type;
 	private String payment_mode;
@@ -47,7 +47,7 @@ public class Appointment
 	
 	
 	//Parameterized Constructor for each field
-	public Appointment(long appointment_id, long doctorId, long patientId, String patient_name, int age , String gender , String description , Date date, Time appointment_time,
+	public Appointment(long appointment_id, long doctorId, long patientId, String patient_name, int age , String gender , String description , Date date, Time appointmentTime,
 			String status, String type, String payment_mode, String transaction_id, String address, int amount_paid) {
 		super();
 		this.appointment_id = appointment_id;
@@ -58,7 +58,7 @@ public class Appointment
 		this.gender = gender;
 		this.description = description;
 		this.date = date;
-		this.appointment_time = appointment_time;
+		this.appointmentTime = appointmentTime;
 		this.status = status;
 		this.type = type;
 		this.payment_mode = payment_mode;
@@ -134,10 +134,10 @@ public class Appointment
 		this.date = date;
 	}
 	public Time getAppointment_time() {
-		return appointment_time;
+		return appointmentTime;
 	}
-	public void setAppointment_time(Time appointment_time) {
-		this.appointment_time = appointment_time;
+	public void setAppointment_time(Time appointmentTime) {
+		this.appointmentTime = appointmentTime;
 	}
 	public String getStatus() {
 		return status;

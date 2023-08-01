@@ -1,5 +1,7 @@
 package com.oneHealth.Appointments.repository;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,5 +61,23 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
      * @return A list of appointments with the specified patient ID and type.
      */
     List<Appointment> findByPatientIdAndType(long patientId, String type);
+    
+    
+ // Retrieve a list of appointments based on the provided currentDate.
+ // The method returns appointments scheduled on the given currentDate.
+ List<Appointment> findByDate(LocalDate currentDate);
+
+ // Retrieve a list of upcoming appointments after the specified date with the given status.
+ // The method returns appointments that are scheduled after the provided date and have the specified status.
+ List<Appointment> findByDateAfterAndStatus(Date date, String status);
+
+ // Retrieve a list of upcoming appointments after the specified date for the given doctorId and status.
+ // The method returns appointments that are scheduled after the provided date, for the specified doctorId, and have the given status.
+ List<Appointment> findByDateAfterAndDoctorIdAndStatus(Date date, long doctorId, String status);
+
+ // Retrieve a list of upcoming appointments after the specified date for the given doctorId, status, and type.
+ // The method returns appointments that are scheduled after the provided date, for the specified doctorId, have the given status, and belong to the specified type.
+ List<Appointment> findByDateAfterAndDoctorIdAndStatusAndType(Date date, long doctorId, String status, String type);
+
 }
 

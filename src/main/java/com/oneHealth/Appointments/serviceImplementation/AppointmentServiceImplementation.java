@@ -2,6 +2,7 @@ package com.oneHealth.Appointments.serviceImplementation;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +98,62 @@ public class AppointmentServiceImplementation implements AppointmentService
         
         repo.delete(appointment);
     }
+
+
+    @Override
+    public List<Appointment> getAppointmentsForToday() {
+        // Get the current date
+        LocalDate currentDate = LocalDate.now();
+
+        // Retrieve appointments for today's date
+        return repo.findByDate(currentDate);
+    }
+
+    @Override
+    public List<Appointment> getUpcomingAppointmentsWithStatus(String status) {
+        // Get the current date
+        LocalDate currentDate = LocalDate.now();
+
+        // Convert LocalDate to java.sql.Date
+        Date sqlDate = Date.valueOf(currentDate);
+
+        // Use the sqlDate and status to fetch upcoming appointments with the specified status
+        return repo.findByDateAfterAndStatus(sqlDate, status);
+    }
+
+    @Override
+    public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatus(long doctorId, String status) throws RecordNotFoundException {
+        // Get the current date
+        Date todayDate = Date.valueOf(LocalDate.now());
+
+        // Call the custom repository method to fetch upcoming appointments for the specified doctorId and status
+        List<Appointment> upcomingAppointments = repo.findByDateAfterAndDoctorIdAndStatus(todayDate, doctorId, status);
+
+        if (upcomingAppointments.isEmpty()) {
+            throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId + " and status: " + status);
+        }
+
+        return upcomingAppointments;
+    }
+
+    @Override
+    public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String status, String type) throws RecordNotFoundException {
+        // Get the current date
+        Date todayDate = Date.valueOf(LocalDate.now());
+
+        // Call the custom repository method to fetch upcoming appointments for the specified doctorId, status, and type
+        List<Appointment> upcomingAppointments = repo.findByDateAfterAndDoctorIdAndStatusAndType(todayDate, doctorId, status, type);
+
+        if (upcomingAppointments.isEmpty()) {
+            throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId +
+                    ", status: " + status + ", and type: " + type);
+        }
+
+        return upcomingAppointments;
+    }
+
+	
+
+	
 }
 
