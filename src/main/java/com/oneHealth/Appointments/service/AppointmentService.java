@@ -94,7 +94,51 @@ public interface AppointmentService
     List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String status, String type) throws RecordNotFoundException;
 
     
+    /**
+     * Retrieves a list of appointments for today's date with a specific doctor ID and status.
+     *
+     * @param doctorId The ID of the doctor for whom to retrieve the appointments.
+     * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+     * @return List<Appointment> A list of appointments matching the specified criteria.
+     * @throws RecordNotFoundException If no appointments are found for the given criteria.
+     */
     List<Appointment> getAppointmentsForTodayByDoctorIdAndStatus(long doctorId, String status) throws RecordNotFoundException;
+
+    /**
+     * Retrieves a list of appointments for today's date with a specific patient ID and status.
+     *
+     * @param patientId The ID of the patient for whom to retrieve the appointments.
+     * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+     * @return List<Appointment> A list of appointments matching the specified criteria.
+     * @throws RecordNotFoundException If no appointments are found for the given criteria.
+     */
+    List<Appointment> getAppointmentsForTodayByPatientIdAndStatus(long patientId, String status) throws RecordNotFoundException;
+
+    /**
+     * Retrieves a list of upcoming appointments with a specific patient ID and status.
+     *
+     * @param patientId The ID of the patient for whom to retrieve the appointments.
+     * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+     * @return List<Appointment> A list of upcoming appointments matching the specified criteria.
+     * @throws RecordNotFoundException If no appointments are found for the given criteria.
+     */
+    List<Appointment> getUpcomingAppointmentsByPatientIdAndStatus(long patientId, String status) throws RecordNotFoundException;
+
+    /**
+     * Updates an appointment with the given appointment ID and updated appointment details.
+     *
+     * @param appointmentId The ID of the appointment to be updated.
+     * @param updatedAppointment The updated appointment details.
+     * @return Appointment The updated appointment.
+     * @throws RecordNotFoundException If the appointment with the given ID is not found.
+     */
+    Appointment updateAppointment(long appointmentId, Appointment updatedAppointment) throws RecordNotFoundException;
+    
+    long getTodayAppointmentsCountByDoctorIdAndStatus(long doctorId, String status);
+    
+    
+    Long getCountOfUpcomingAppointmentsByDoctorIdAndStatus(Long doctorId, String status);
+
 
 }
 

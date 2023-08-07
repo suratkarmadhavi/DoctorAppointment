@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+
 import com.oneHealth.Appointments.entity.Appointment;
 
 /**
@@ -80,7 +81,42 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
  List<Appointment> findByDateAfterAndDoctorIdAndStatusAndType(Date date, long doctorId, String status, String type);
  
  
+ /**
+  * Retrieves a list of appointments for a specific date, doctor ID, and status.
+  *
+  * @param currentDate The specific date for which to retrieve appointments.
+  * @param doctorId The ID of the doctor for whom to retrieve the appointments.
+  * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+  * @return List<Appointment> A list of appointments matching the specified criteria.
+  */
  List<Appointment> findByDateAndDoctorIdAndStatus(LocalDate currentDate, long doctorId, String status);
+
+ /**
+  * Retrieves a list of appointments for a specific date, patient ID, and status.
+  *
+  * @param date The specific date for which to retrieve appointments.
+  * @param patientId The ID of the patient for whom to retrieve the appointments.
+  * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+  * @return List<Appointment> A list of appointments matching the specified criteria.
+  */
+ List<Appointment> findByDateAndPatientIdAndStatus(LocalDate date, long patientId, String status);
+
+ /**
+  * Retrieves a list of upcoming appointments for a specific date, patient ID, and status.
+  *
+  * @param date The specific date for which to retrieve upcoming appointments.
+  * @param patientId The ID of the patient for whom to retrieve the appointments.
+  * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+  * @return List<Appointment> A list of upcoming appointments matching the specified criteria.
+  */
+ List<Appointment> findByDateAfterAndPatientIdAndStatus(Date date, long patientId, String status);
+ 
+ 
+ long countByDoctorIdAndStatusAndDate(long doctorId, String status, LocalDate date);
+ 
+ 
+
+
 
 }
 
