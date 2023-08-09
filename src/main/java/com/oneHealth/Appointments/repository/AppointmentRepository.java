@@ -114,6 +114,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
  
  long countByDoctorIdAndStatusAndDate(long doctorId, String status, LocalDate date);
  
+ List<Appointment> findByPatientIdAndStatus(long patientId, String status);
+ 
  
 
 

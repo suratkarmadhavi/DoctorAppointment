@@ -313,5 +313,10 @@ public class AppointmentServiceImplementation implements AppointmentService
         return (long) upcomingAppointments.size();
 	}
 
+	@Override
+	public List<Appointment> findByPatientIdAndStatus(long patientId, String status) {
+		return repo.findByPatientIdAndStatus(patientId, status);
+	}
+
 
 }

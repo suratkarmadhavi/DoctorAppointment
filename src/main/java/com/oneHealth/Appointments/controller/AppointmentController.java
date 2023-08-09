@@ -108,28 +108,52 @@ public class AppointmentController {
             return ResponseEntity.ok(appointments);
         }
     }
-
+    
+    
     /**
-     * Retrieves a list of appointments for a specific patient with the given patient ID and type.
+     * Retrieves a list of appointments for a specific doctor with the status "Not Accepted".
      *
-     * @param patientId The ID of the patient for whom to retrieve the appointments.
-     * @param type The type of appointments to retrieve (e.g., "checkup", "follow-up", etc.).
+     * @param doctorId The ID of the doctor for whom to retrieve the appointments.
      * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
      */
-    @GetMapping("/patient/{patientId}/type/{type}")
-    public ResponseEntity<List<Appointment>> getAppointmentsByPatientIdAndType(
-            @PathVariable("patientId") long patientId,
-            @PathVariable("type") String type) {
-        LOGGER.info("In Controller - Retrieving appointments for patient ID: " + patientId + " with type: " + type);
-        List<Appointment> appointments = service.findByPatientIdAndType(patientId, type);
+    @GetMapping("/doctor/{doctorId}/Completed")
+    public ResponseEntity<List<Appointment>> getAppointmentsByDoctorIdAndCompleted(
+            @PathVariable("doctorId") long doctorId) {
+        LOGGER.info("In Controller - Retrieving appointments for doctor ID: " + doctorId + " with status 'Not Accepted'");
+        String status = "Completed";
+        List<Appointment> appointments = service.findByDoctorIdAndStatus(doctorId, status);
         if (appointments.isEmpty()) {
-            LOGGER.info("In Controller - No appointments found for patient ID: " + patientId + " with type: " + type);
+            LOGGER.info("In Controller - No appointments found for doctor ID: " + doctorId + " with status 'Not Accepted'");
             return ResponseEntity.noContent().build();
         } else {
-            LOGGER.info("In Controller - Appointments found for patient ID: " + patientId + " with type: " + type + ": " + appointments);
+            LOGGER.info("In Controller - Appointments found for doctor ID: " + doctorId + " with status 'Not Accepted': " + appointments);
             return ResponseEntity.ok(appointments);
         }
     }
+    
+    
+    /**
+     * Retrieves a list of appointments for a specific doctor with the status "Not Accepted".
+     *
+     * @param doctorId The ID of the doctor for whom to retrieve the appointments.
+     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
+     */
+    @GetMapping("/doctor/{doctorId}/Rejected")
+    public ResponseEntity<List<Appointment>> getAppointmentsByDoctorIdAndRejected(
+            @PathVariable("doctorId") long doctorId) {
+        LOGGER.info("In Controller - Retrieving appointments for doctor ID: " + doctorId + " with status 'Not Accepted'");
+        String status = "Rejected";
+        List<Appointment> appointments = service.findByDoctorIdAndStatus(doctorId, status);
+        if (appointments.isEmpty()) {
+            LOGGER.info("In Controller - No appointments found for doctor ID: " + doctorId + " with status 'Not Accepted'");
+            return ResponseEntity.noContent().build();
+        } else {
+            LOGGER.info("In Controller - Appointments found for doctor ID: " + doctorId + " with status 'Not Accepted': " + appointments);
+            return ResponseEntity.ok(appointments);
+        }
+    }
+
+    
 
     /**
      * Updates the status of an appointment with the given appointment ID.
@@ -277,45 +301,6 @@ public class AppointmentController {
 
     
     
-    @GetMapping("/appointments-for-today/patient/{patientId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsForTodayByPatientIdAndStatus(
-            @PathVariable long patientId) throws RecordNotFoundException {
-        LOGGER.info("In Controller - Retrieving appointments for today for patient ID: " + patientId + " with status 'Accepted'");
-        String status = "Accepted";
-        List<Appointment> appointments = service.getAppointmentsForTodayByPatientIdAndStatus(patientId, status);
-        if (appointments.isEmpty()) {
-            LOGGER.info("In Controller - No appointments found for today for patient ID: " + patientId + " with status 'Accepted'");
-            return ResponseEntity.noContent().build();
-        } else {
-            LOGGER.info("In Controller - Appointments found for today for patient ID: " + patientId + " with status 'Accepted': " + appointments);
-            return ResponseEntity.ok(appointments);
-        }
-    }
-    
-    
-    
-    /**
-     * Retrieves a list of upcoming appointments for a specific doctor with the status "Accepted".
-     *
-     * @param patientId The ID of the doctor for whom to retrieve the appointments.
-     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
-     * @throws RecordNotFoundException If no appointments are found for the given doctor ID.
-     */
-    @GetMapping("/upcoming-appointments/patient/{patientId}")
-    public ResponseEntity<List<Appointment>> getUpcomingAppointmentsByPatientIdAndStatus(
-            @PathVariable long patientId) throws RecordNotFoundException {
-        LOGGER.info("In Controller - Retrieving upcoming appointments for patient ID: " + patientId + " with status 'Accepted'");
-        String status = "Accepted";
-        List<Appointment> upcomingAppointments = service.getUpcomingAppointmentsByPatientIdAndStatus(patientId, status);
-        if (upcomingAppointments.isEmpty()) {
-            LOGGER.info("In Controller - No upcoming appointments found for patient ID: " + patientId + " with status 'Accepted'");
-            return ResponseEntity.noContent().build();
-        } else {
-            LOGGER.info("In Controller - Upcoming appointments found for patient ID: " + patientId + " with status 'Accepted': " + upcomingAppointments);
-            return ResponseEntity.ok(upcomingAppointments);
-        }
-    }
-
     /**
      * Updates the details of an appointment with the given appointment ID.
      *
@@ -356,6 +341,98 @@ public class AppointmentController {
     	String status = "Accepted";
         Long count = service.getCountOfUpcomingAppointmentsByDoctorIdAndStatus(doctorId, status);
         return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    @GetMapping("/patient/{patientId}/completed")
+    public List<Appointment> getAppointmentsByPatientIdAndCompleted(
+            @PathVariable long patientId) 
+    {
+        String status = "Completed";
+    	return service.findByPatientIdAndStatus(patientId, status);
+    }
+    
+    @GetMapping("/patient/{patientId}/rejected")
+    public List<Appointment> getAppointmentsByPatientIdAndRejected(
+            @PathVariable long patientId) 
+    {
+        String status = "Rejected";
+    	return service.findByPatientIdAndStatus(patientId, status);
+    }
+    
+    @GetMapping("/patient/{patientId}/NotAccepted")
+    public List<Appointment> getAppointmentsByPatientIdAndNotAccepted(
+            @PathVariable long patientId) 
+    {
+        String status = "Not Accepted";
+    	return service.findByPatientIdAndStatus(patientId, status);
+    }
+    
+    
+    /**
+     * Retrieves a list of upcoming appointments for a specific doctor with the status "Accepted".
+     *
+     * @param patientId The ID of the doctor for whom to retrieve the appointments.
+     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
+     * @throws RecordNotFoundException If no appointments are found for the given doctor ID.
+     */
+    @GetMapping("/upcoming-appointments/patient/{patientId}")
+    public ResponseEntity<List<Appointment>> getUpcomingAppointmentsByPatientIdAndStatus(
+            @PathVariable long patientId) throws RecordNotFoundException {
+        LOGGER.info("In Controller - Retrieving upcoming appointments for patient ID: " + patientId + " with status 'Accepted'");
+        String status = "Accepted";
+        List<Appointment> upcomingAppointments = service.getUpcomingAppointmentsByPatientIdAndStatus(patientId, status);
+        if (upcomingAppointments.isEmpty()) {
+            LOGGER.info("In Controller - No upcoming appointments found for patient ID: " + patientId + " with status 'Accepted'");
+            return ResponseEntity.noContent().build();
+        } else {
+            LOGGER.info("In Controller - Upcoming appointments found for patient ID: " + patientId + " with status 'Accepted': " + upcomingAppointments);
+            return ResponseEntity.ok(upcomingAppointments);
+        }
+    }
+    
+    
+    @GetMapping("/appointments-for-today/patient/{patientId}")
+    public ResponseEntity<List<Appointment>> getAppointmentsForTodayByPatientIdAndStatus(
+            @PathVariable long patientId) throws RecordNotFoundException {
+        LOGGER.info("In Controller - Retrieving appointments for today for patient ID: " + patientId + " with status 'Accepted'");
+        String status = "Accepted";
+        List<Appointment> appointments = service.getAppointmentsForTodayByPatientIdAndStatus(patientId, status);
+        if (appointments.isEmpty()) {
+            LOGGER.info("In Controller - No appointments found for today for patient ID: " + patientId + " with status 'Accepted'");
+            return ResponseEntity.noContent().build();
+        } else {
+            LOGGER.info("In Controller - Appointments found for today for patient ID: " + patientId + " with status 'Accepted': " + appointments);
+            return ResponseEntity.ok(appointments);
+        }
+    }
+    
+    
+    /**
+     * Retrieves a list of appointments for a specific patient with the given patient ID and type.
+     *
+     * @param patientId The ID of the patient for whom to retrieve the appointments.
+     * @param type The type of appointments to retrieve (e.g., "checkup", "follow-up", etc.).
+     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
+     */
+    @GetMapping("/patient/{patientId}/type/{type}")
+    public ResponseEntity<List<Appointment>> getAppointmentsByPatientIdAndType(
+            @PathVariable("patientId") long patientId,
+            @PathVariable("type") String type) {
+        LOGGER.info("In Controller - Retrieving appointments for patient ID: " + patientId + " with type: " + type);
+        List<Appointment> appointments = service.findByPatientIdAndType(patientId, type);
+        if (appointments.isEmpty()) {
+            LOGGER.info("In Controller - No appointments found for patient ID: " + patientId + " with type: " + type);
+            return ResponseEntity.noContent().build();
+        } else {
+            LOGGER.info("In Controller - Appointments found for patient ID: " + patientId + " with type: " + type + ": " + appointments);
+            return ResponseEntity.ok(appointments);
+        }
     }
     
     
