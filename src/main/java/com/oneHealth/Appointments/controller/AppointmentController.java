@@ -2,6 +2,7 @@ package com.oneHealth.Appointments.controller;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,31 +42,31 @@ public class AppointmentController {
         return new ResponseEntity<>("Appointment Saved Successfully", HttpStatus.OK);
     }
 
-    /**
-     * Retrieves a list of appointments for a specific patient.
-     *
-     * @param patientId The ID of the patient for whom to retrieve the appointments.
-     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
-     */
-    @GetMapping("/findbypatientid/{id}")
-    public ResponseEntity<List<Appointment>> findByPatientId(@PathVariable(value = "id") long patientId) {
-        LOGGER.info("In Controller - Retrieving appointments for patient ID: " + patientId);
-        List<Appointment> obj = service.findByPatientId(patientId);
-        return ResponseEntity.ok().body(obj);
-    }
-
-    /**
-     * Retrieves a list of appointments for a specific doctor.
-     *
-     * @param doctorId The ID of the doctor for whom to retrieve the appointments.
-     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
-     */
-    @GetMapping("/findbydoctorid/{id}")
-    public ResponseEntity<List<Appointment>> findByDoctorId(@PathVariable(value = "id") long doctorId) {
-        LOGGER.info("In Controller - Retrieving appointments for doctor ID: " + doctorId);
-        List<Appointment> obj = service.findByDoctorId(doctorId);
-        return ResponseEntity.ok().body(obj);
-    }
+//    /**
+//     * Retrieves a list of appointments for a specific patient.
+//     *
+//     * @param patientId The ID of the patient for whom to retrieve the appointments.
+//     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
+//     */
+//    @GetMapping("/findbypatientid/{id}")
+//    public ResponseEntity<List<Appointment>> findByPatientId(@PathVariable(value = "id") long patientId) {
+//        LOGGER.info("In Controller - Retrieving appointments for patient ID: " + patientId);
+//        List<Appointment> obj = service.findByPatientId(patientId);
+//        return ResponseEntity.ok().body(obj);
+//    }
+//
+//    /**
+//     * Retrieves a list of appointments for a specific doctor.
+//     *
+//     * @param doctorId The ID of the doctor for whom to retrieve the appointments.
+//     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
+//     */
+//    @GetMapping("/findbydoctorid/{id}")
+//    public ResponseEntity<List<Appointment>> findByDoctorId(@PathVariable(value = "id") long doctorId) {
+//        LOGGER.info("In Controller - Retrieving appointments for doctor ID: " + doctorId);
+//        List<Appointment> obj = service.findByDoctorId(doctorId);
+//        return ResponseEntity.ok().body(obj);
+//    }
 
     /**
      * Retrieves a list of appointments for a specific doctor with the status "Accepted".
@@ -99,7 +100,7 @@ public class AppointmentController {
             @PathVariable("doctorId") long doctorId) {
         LOGGER.info("In Controller - Retrieving appointments for doctor ID: " + doctorId + " with status 'Not Accepted'");
         String status = "Not Accepted";
-        List<Appointment> appointments = service.findByDoctorIdAndStatus(doctorId, status);
+        List<Appointment> appointments = service.NotAcceptedAppointmentsForRequest(doctorId, status);
         if (appointments.isEmpty()) {
             LOGGER.info("In Controller - No appointments found for doctor ID: " + doctorId + " with status 'Not Accepted'");
             return ResponseEntity.noContent().build();
@@ -387,30 +388,20 @@ public class AppointmentController {
         LOGGER.info("In Controller - Retrieving upcoming appointments for patient ID: " + patientId + " with status 'Accepted'");
         String status = "Accepted";
         List<Appointment> upcomingAppointments = service.getUpcomingAppointmentsByPatientIdAndStatus(patientId, status);
-        if (upcomingAppointments.isEmpty()) {
+        List<Appointment> todayappointments = service.getAppointmentsForTodayByPatientIdAndStatus(patientId, status);
+        List<Appointment> FinalUpcoming = new ArrayList<>();
+        FinalUpcoming.addAll(upcomingAppointments);
+        FinalUpcoming.addAll(todayappointments);
+        
+        if (FinalUpcoming.isEmpty()) {
             LOGGER.info("In Controller - No upcoming appointments found for patient ID: " + patientId + " with status 'Accepted'");
             return ResponseEntity.noContent().build();
         } else {
             LOGGER.info("In Controller - Upcoming appointments found for patient ID: " + patientId + " with status 'Accepted': " + upcomingAppointments);
-            return ResponseEntity.ok(upcomingAppointments);
+            return ResponseEntity.ok(FinalUpcoming);
         }
     }
     
-    
-    @GetMapping("/appointments-for-today/patient/{patientId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsForTodayByPatientIdAndStatus(
-            @PathVariable long patientId) throws RecordNotFoundException {
-        LOGGER.info("In Controller - Retrieving appointments for today for patient ID: " + patientId + " with status 'Accepted'");
-        String status = "Accepted";
-        List<Appointment> appointments = service.getAppointmentsForTodayByPatientIdAndStatus(patientId, status);
-        if (appointments.isEmpty()) {
-            LOGGER.info("In Controller - No appointments found for today for patient ID: " + patientId + " with status 'Accepted'");
-            return ResponseEntity.noContent().build();
-        } else {
-            LOGGER.info("In Controller - Appointments found for today for patient ID: " + patientId + " with status 'Accepted': " + appointments);
-            return ResponseEntity.ok(appointments);
-        }
-    }
     
     
     /**

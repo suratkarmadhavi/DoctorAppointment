@@ -3,6 +3,7 @@ package com.oneHealth.Appointments.serviceImplementation;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -180,7 +181,7 @@ public class AppointmentServiceImplementation implements AppointmentService
     @Override
     public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatus(long doctorId, String status) throws RecordNotFoundException {
         LOGGER.info("Retrieving upcoming appointments for Doctor ID: " + doctorId + " with status: " + status);
-        Date todayDate = Date.valueOf(LocalDate.now());
+        LocalDate todayDate = LocalDate.now();
         List<Appointment> upcomingAppointments = repo.findByDateAfterAndDoctorIdAndStatus(todayDate, doctorId, status);
 
         if (upcomingAppointments.isEmpty()) {
@@ -307,7 +308,7 @@ public class AppointmentServiceImplementation implements AppointmentService
 
 	@Override
 	public Long getCountOfUpcomingAppointmentsByDoctorIdAndStatus(Long doctorId, String status) {
-		Date todayDate = Date.valueOf(LocalDate.now());
+		LocalDate todayDate = LocalDate.now();
         List<Appointment> upcomingAppointments = repo.findByDateAfterAndDoctorIdAndStatus(todayDate, doctorId, status);
         
         return (long) upcomingAppointments.size();
@@ -317,6 +318,20 @@ public class AppointmentServiceImplementation implements AppointmentService
 	public List<Appointment> findByPatientIdAndStatus(long patientId, String status) {
 		return repo.findByPatientIdAndStatus(patientId, status);
 	}
+
+	@Override
+	public List<Appointment> NotAcceptedAppointmentsForRequest(long doctorId, String status) {
+		LocalDate todayDate = LocalDate.now();
+		List<Appointment>today = repo.findByDateAndDoctorIdAndStatus(todayDate , doctorId , status);
+		List<Appointment>upcoming = repo.findByDateAfterAndDoctorIdAndStatus(todayDate, doctorId, status);
+		List<Appointment>Both = new ArrayList<>();
+		Both.addAll(upcoming);
+		Both.addAll(today);
+		return Both;
+	}
+	
+	
+	
 
 
 }

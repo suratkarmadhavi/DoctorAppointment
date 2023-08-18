@@ -140,6 +140,10 @@ public interface AppointmentService
     Long getCountOfUpcomingAppointmentsByDoctorIdAndStatus(Long doctorId, String status);
     
     List<Appointment> findByPatientIdAndStatus(long patientId, String status);
+    
+    
+    
+    List<Appointment> NotAcceptedAppointmentsForRequest(long doctorId , String status);
 
 
 }

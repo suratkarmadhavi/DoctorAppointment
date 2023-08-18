@@ -74,7 +74,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
  // Retrieve a list of upcoming appointments after the specified date for the given doctorId and status.
  // The method returns appointments that are scheduled after the provided date, for the specified doctorId, and have the given status.
- List<Appointment> findByDateAfterAndDoctorIdAndStatus(Date date, long doctorId, String status);
+ List<Appointment> findByDateAfterAndDoctorIdAndStatus(LocalDate date, long doctorId, String status);
 
  // Retrieve a list of upcoming appointments after the specified date for the given doctorId, status, and type.
  // The method returns appointments that are scheduled after the provided date, for the specified doctorId, have the given status, and belong to the specified type.
