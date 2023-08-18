@@ -20,8 +20,7 @@ import com.oneHealth.Appointments.service.AppointmentService;
  * @version 3.9.10
  */
 @RestController
-@CrossOrigin("*")
-@RequestMapping("/api/appointment")
+@RequestMapping("/api/doctors/appointment")
 public class AppointmentController {
 
     private static final Logger LOGGER = Logger.getLogger(AppointmentController.class.getName());
