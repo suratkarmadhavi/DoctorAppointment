@@ -2,14 +2,22 @@ package com.oneHealth.Appointments.serviceImplementation;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import com.oneHealth.Appointments.DTO.AppointmentDTO;
+import com.oneHealth.Appointments.DTO.DoctorProfile;
+import com.oneHealth.Appointments.DTO.Patient;
 import com.oneHealth.Appointments.entity.Appointment;
 import com.oneHealth.Appointments.exception.ProfileNotFoundException;
 import com.oneHealth.Appointments.exception.RecordNotFoundException;
@@ -28,7 +36,16 @@ public class AppointmentServiceImplementation implements AppointmentService
 
     @Autowired
     private AppointmentRepository repo;
+    
+    
+    @Autowired
+    private WebClient.Builder builder;
+    
+    @Autowired
+    private ModelMapper mapper;
+    
 
+    
     /**
      * Saves the details of a new appointment into the database.
      *
@@ -38,8 +55,50 @@ public class AppointmentServiceImplementation implements AppointmentService
     @Override
     public Appointment saveAppointment(Appointment obj) {
         LOGGER.info("In Service - Saving appointment: " + obj);
+
+        // Fetch patient details using WebClient
+        Patient patientDto = builder.build()
+            .get()
+            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/{patient_id}", obj.getPatientId())
+             .retrieve()
+            .bodyToMono(Patient.class)
+            .block();
+        System.out.println(patientDto);
+
+        // Fetch doctor profile using WebClient
+        DoctorProfile profile = builder.build()
+            .get()
+            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/api/doctors/addressprofileregistration/getdoctorprofile/{id}", obj.getDoctorId())
+            .retrieve()
+            .bodyToMono(DoctorProfile.class)
+            .block();
+        System.out.println(profile);
+
+        // Create an AppointmentDTO and map relevant fields
+        AppointmentDTO dto = new AppointmentDTO();
+        mapper.map(obj, dto);
+        dto.setDoctor_name(profile.getFirst_name() + " " + profile.getLast_name());
+        dto.setContact(profile.getContact());
+
+        // Set patient and doctor email addresses (you might want to dynamically fetch patient email)
+        dto.setPatient_email("varungarade1151@gmail.com");
+        dto.setDoctor_email(profile.getEmail());
+
+        // Prepare and send appointment email using WebClient
+        WebClient.ResponseSpec responseSpec = builder.baseUrl("http://localhost:9090")
+                .build()
+                .post()
+                .uri("/appointmentEmail")
+                .body(BodyInserters.fromValue(dto))
+                .retrieve(); // This prepares the request
+
+        // Send the request and handle the response
+        responseSpec.toBodilessEntity().subscribe();
+
+        // Save the appointment details to the repository
         return repo.save(obj);
     }
+
 
     /**
      * Retrieves a list of appointments for a specific patient ID.
@@ -124,7 +183,7 @@ public class AppointmentServiceImplementation implements AppointmentService
                 .orElseThrow(() -> new RecordNotFoundException("No Appointment Found with ID: " + appointment_id));
 
         appointment.setDate(newDate);
-        appointment.setAppointment_time(newTime);
+        appointment.setAppointmentTime(newTime);
 
         return repo.save(appointment);
     }
@@ -287,11 +346,12 @@ public class AppointmentServiceImplementation implements AppointmentService
 
         // Update all fields based on the updatedAppointment object
         existingAppointment.setPatient_name(updatedAppointment.getPatient_name());
+        existingAppointment.setDoctorName(updatedAppointment.getDoctorName());
         existingAppointment.setAge(updatedAppointment.getAge());
         existingAppointment.setGender(updatedAppointment.getGender());
         existingAppointment.setDescription(updatedAppointment.getDescription());
         existingAppointment.setDate(updatedAppointment.getDate());
-        existingAppointment.setAppointment_time(updatedAppointment.getAppointment_time());
+        existingAppointment.setAppointmentTime(updatedAppointment.getAppointmentTime());
         existingAppointment.setType(updatedAppointment.getType());
         existingAppointment.setPayment_mode(updatedAppointment.getPayment_mode());
         existingAppointment.setTransaction_id(updatedAppointment.getTransaction_id());
@@ -331,7 +391,35 @@ public class AppointmentServiceImplementation implements AppointmentService
 	}
 	
 	
-	
+	   public static AppointmentDTO createDummyAppointment() {
+	        AppointmentDTO appointment = new AppointmentDTO();
+	        appointment.setAppointment_id(1);
+	        appointment.setDoctorId(123);
+	        appointment.setPatientId(456);
+	        appointment.setPatient_name("John Doe");
+	        appointment.setAge(30);
+	        appointment.setGender("Male");
+	        appointment.setDescription("Regular checkup");
+	        
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+	        try {
+	            appointment.setDate(new Date(dateFormat.parse("2023-08-22").getTime()));
+	            appointment.setAppointmentTime(new Time(timeFormat.parse("15:30:00").getTime()));
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
+	        
+	        appointment.setStatus("Scheduled");
+	        appointment.setType("General");
+	        appointment.setPayment_mode("Credit Card");
+	        appointment.setTransaction_id("ABC123XYZ");
+	        appointment.setAddress("123 Main St, City");
+	        appointment.setAmount_paid(100);
+	        appointment.setPatient_email("varungarade1151@gmail.com");
+	        
+	        return appointment;
+	    }
 
 
 }

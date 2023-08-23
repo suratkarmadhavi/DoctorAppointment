@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,8 @@ import com.oneHealth.Appointments.entity.Appointment;
 import com.oneHealth.Appointments.exception.ProfileNotFoundException;
 import com.oneHealth.Appointments.exception.RecordNotFoundException;
 import com.oneHealth.Appointments.service.AppointmentService;
+
+
 
 /**
  * Controller class that handles HTTP requests and responses related to Appointments.
@@ -38,8 +41,17 @@ public class AppointmentController {
     public ResponseEntity<String> saveAppointmentDetails(@RequestBody Appointment appointment) {
         LOGGER.info("In Controller - Saving appointment details: " + appointment);
         service.saveAppointment(appointment);
+        
+        
+        
         return new ResponseEntity<>("Appointment Saved Successfully", HttpStatus.OK);
     }
+   
+    
+   
+    
+
+
 
 //    /**
 //     * Retrieves a list of appointments for a specific patient.
