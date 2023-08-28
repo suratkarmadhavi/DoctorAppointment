@@ -95,7 +95,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		dto.setDoctor_email(profile.getEmail());
 
 		// Prepare and send appointment email using WebClient
-		WebClient.ResponseSpec responseSpec = builder.baseUrl("http://localhost:9090").build().post()
+		WebClient.ResponseSpec responseSpec = builder.baseUrl("https://emailservice-madhavi-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/emailService").build().post()
 				.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the request
 
 		// Send the request and handle the response
