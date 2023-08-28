@@ -145,6 +145,7 @@ public interface AppointmentService
     
     List<Appointment> NotAcceptedAppointmentsForRequest(long doctorId , String status);
 
-
+	List<Appointment> findUpcomingByPatientId(long patientId);
+	
 }
 

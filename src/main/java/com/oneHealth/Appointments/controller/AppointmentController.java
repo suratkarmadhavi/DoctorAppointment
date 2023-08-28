@@ -436,6 +436,28 @@ public class AppointmentController {
             return ResponseEntity.ok(appointments);
         }
     }
-    
+    @GetMapping("/upcoming-for-patients-all/{patientId}")
+
+    public ResponseEntity<List<Appointment>> getUpcomingByPatientId(@PathVariable("patientId") long patientId)
+
+    {
+
+        List<Appointment> appointments = service.findUpcomingByPatientId(patientId);
+
+        if (appointments.isEmpty()) {
+
+            LOGGER.info("In Controller - No appointments found for patient ID: " + patientId);
+
+            return ResponseEntity.noContent().build();
+
+        } else {
+
+            LOGGER.info("In Controller - Appointments found for patient ID: " + patientId +": " + appointments);
+
+            return ResponseEntity.ok(appointments);
+
+        }
+
+    }
     
 }
