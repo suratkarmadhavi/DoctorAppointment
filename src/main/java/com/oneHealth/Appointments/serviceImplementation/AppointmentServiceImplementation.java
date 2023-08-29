@@ -105,6 +105,100 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return repo.save(obj);
 	}
 
+	
+	
+	
+	@Override
+	public Appointment saveDoctorAppointment(Appointment obj) {
+		LOGGER.info("In Service - Saving appointment: " + obj);
+
+		// Fetch patient details using WebClient
+        Patient patientDto = builder.build()
+            .get()
+            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/{patient_id}", obj.getPatientId())
+            .retrieve()
+            .bodyToMono(Patient.class)
+            .block();
+        System.out.println(patientDto);
+
+		// Fetch doctor profile using WebClient
+		DoctorProfile profile = builder.build().get().uri(
+				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
+				obj.getDoctorId()).retrieve().bodyToMono(DoctorProfile.class).block();
+		System.out.println(profile);
+
+		// Create an AppointmentDTO and map relevant fields
+		AppointmentDTO dto = new AppointmentDTO();
+		mapper.map(obj, dto);
+		dto.setDoctor_name(profile.getFirst_name() + " " + profile.getLast_name());
+		dto.setContact(profile.getContact());
+
+		// Set patient and doctor email addresses (you might want to dynamically fetch
+		// patient email)
+		dto.setPatient_email(patientDto.getEmailId());
+		dto.setDoctor_email(profile.getEmail());
+
+		// Prepare and send appointment email using WebClient
+		WebClient.ResponseSpec responseSpec = builder.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build().post()
+				.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the request
+
+		// Send the request and handle the response
+		responseSpec.toBodilessEntity().subscribe();
+
+		// Save the appointment details to the repository
+		return repo.save(obj);
+	}
+
+	@Override
+	public Appointment savePatientAppointment(Appointment obj) {
+		
+			LOGGER.info("In Service - Saving appointment: " + obj);
+
+			// Fetch patient details using WebClient
+	        Patient patientDto = builder.build()
+	            .get()
+	            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/{patient_id}", obj.getPatientId())
+	            .retrieve()
+	            .bodyToMono(Patient.class)
+	            .block();
+	        System.out.println(patientDto);
+
+			// Fetch doctor profile using WebClient
+			DoctorProfile profile = builder.build().get().uri(
+					"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
+					obj.getDoctorId()).retrieve().bodyToMono(DoctorProfile.class).block();
+			System.out.println(profile);
+
+			// Create an AppointmentDTO and map relevant fields
+			AppointmentDTO dto = new AppointmentDTO();
+			mapper.map(obj, dto);
+			dto.setDoctor_name(profile.getFirst_name() + " " + profile.getLast_name());
+			dto.setContact(profile.getContact());
+
+			// Set patient and doctor email addresses (you might want to dynamically fetch
+			// patient email)
+			dto.setPatient_email(patientDto.getEmailId());
+			dto.setDoctor_email(profile.getEmail());
+
+			// Prepare and send appointment email using WebClient
+			WebClient.ResponseSpec responseSpec = builder.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build().post()
+					.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the request
+
+			// Send the request and handle the response
+			responseSpec.toBodilessEntity().subscribe();
+
+			// Save the appointment details to the repository
+			return repo.save(obj);
+		}
+
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Retrieves a list of appointments for a specific patient ID.
 	 *
@@ -473,5 +567,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
         return Both;
 
     }
+
+	
 
 }

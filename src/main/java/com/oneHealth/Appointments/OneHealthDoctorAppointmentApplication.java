@@ -27,9 +27,9 @@ public class OneHealthDoctorAppointmentApplication {
 	 return new ModelMapper();
 	}
 	
-	@Bean
-	public RestTemplate getRestTemplate() {
-	 return new RestTemplate();
-	}
+//	@Bean
+//	public RestTemplate getRestTemplate() {
+//	 return new RestTemplate();
+//	}
 
 }

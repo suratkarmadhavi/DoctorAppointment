@@ -40,8 +40,8 @@ public class AppointmentController {
     @PostMapping("/saveappointment")
     public ResponseEntity<String> saveAppointmentDetails(@RequestBody Appointment appointment) {
         LOGGER.info("In Controller - Saving appointment details: " + appointment);
-        service.saveAppointment(appointment);
-        
+        service.saveDoctorAppointment(appointment);
+        service.savePatientAppointment(appointment);
         
         
         return new ResponseEntity<>("Appointment Saved Successfully", HttpStatus.OK);
