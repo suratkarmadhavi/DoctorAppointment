@@ -48,16 +48,26 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	private ModelMapper mapper;
 
 
-
+	public boolean isDuplicateAppointmentExists(long doctorId, Time appointmentTime, Date date) {
+        return repo.existsByDoctorIdAndAppointmentTimeAndDate(doctorId, appointmentTime, date);
+    }
 	/**
 	 * Saves the details of a new appointment into the database.
 	 *
 	 * @param obj The Appointment object to be saved.
 	 * @return The saved Appointment object.
+	 * @throws Exception 
 	 */
 	@Override
-	public Appointment saveAppointment(Appointment obj) {
+	public Appointment saveAppointment(Appointment obj) throws Exception {
 		LOGGER.info("In Service - Saving appointment: " + obj);
+		
+		if (isDuplicateAppointmentExists(
+                obj.getDoctorId(), 
+                obj.getAppointmentTime(), 
+                obj.getDate())) {
+            throw new Exception("Duplicate appointment found");
+        }
 
 		// Fetch patient details using WebClient
         Patient patientDto = builder.build()
@@ -66,13 +76,6 @@ public class AppointmentServiceImplementation implements AppointmentService {
             .retrieve()
             .bodyToMono(Patient.class)
             .block();
-
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//		HttpEntity entity = new HttpEntity(headers);
-//		String patientDto = restTemplate.exchange(
-//				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/10",
-//				HttpMethod.GET, entity, String.class).getBody();
 
 
 		System.out.println(patientDto);
@@ -109,8 +112,15 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	
 	
 	@Override
-	public Appointment saveDoctorAppointment(Appointment obj) {
+	public Appointment saveDoctorAppointment(Appointment obj) throws Exception {
 		LOGGER.info("In Service - Saving appointment: " + obj);
+		
+		if (isDuplicateAppointmentExists(
+                obj.getDoctorId(), 
+                obj.getAppointmentTime(), 
+                obj.getDate())) {
+            throw new Exception("Duplicate appointment found");
+        }
 
 		// Fetch patient details using WebClient
         Patient patientDto = builder.build()
@@ -150,9 +160,16 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	}
 
 	@Override
-	public Appointment savePatientAppointment(Appointment obj) {
+	public void savePatientAppointment(Appointment obj) throws Exception {
 		
 			LOGGER.info("In Service - Saving appointment: " + obj);
+			
+//			if (isDuplicateAppointmentExists(
+//	                obj.getDoctorId(), 
+//	                obj.getAppointmentTime(), 
+//	                obj.getDate())) {
+//	            throw new Exception("Duplicate appointment found");
+//	        }
 
 			// Fetch patient details using WebClient
 	        Patient patientDto = builder.build()
@@ -188,7 +205,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
 			responseSpec.toBodilessEntity().subscribe();
 
 			// Save the appointment details to the repository
-			return repo.save(obj);
+			//return repo.save(obj);
 		}
 
 	

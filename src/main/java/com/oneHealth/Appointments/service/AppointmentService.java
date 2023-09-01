@@ -18,8 +18,9 @@ public interface AppointmentService
 {
     /**
      * Save the appointment details into the database.
+     * @throws Exception 
      */
-    Appointment saveAppointment(Appointment obj);
+    Appointment saveAppointment(Appointment obj) throws Exception;
 
     /**
      * Find an appointment by patient ID.
@@ -147,9 +148,9 @@ public interface AppointmentService
 
 	List<Appointment> findUpcomingByPatientId(long patientId);
 
-	Appointment saveDoctorAppointment(Appointment appointment);
+	Appointment saveDoctorAppointment(Appointment appointment) throws Exception;
 
-	Appointment savePatientAppointment(Appointment appointment);
+	void savePatientAppointment(Appointment appointment) throws Exception;
 	
 }
 

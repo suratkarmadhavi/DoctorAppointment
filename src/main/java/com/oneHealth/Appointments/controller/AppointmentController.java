@@ -36,12 +36,21 @@ public class AppointmentController {
      *
      * @param appointment The Appointment object containing the details to be saved.
      * @return ResponseEntity<String> A response indicating the success of the operation.
+     * @throws Exception 
      */
     @PostMapping("/saveappointment")
     public ResponseEntity<String> saveAppointmentDetails(@RequestBody Appointment appointment) {
         LOGGER.info("In Controller - Saving appointment details: " + appointment);
-        service.saveDoctorAppointment(appointment);
-        service.savePatientAppointment(appointment);
+        try {
+			service.saveDoctorAppointment(appointment);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Appointment Slot Already Booked", HttpStatus.INTERNAL_SERVER_ERROR); 
+		}
+        try {
+			service.savePatientAppointment(appointment);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Appointment Slot Already Booked", HttpStatus.INTERNAL_SERVER_ERROR); 
+		}
         
         
         return new ResponseEntity<>("Appointment Saved Successfully", HttpStatus.OK);

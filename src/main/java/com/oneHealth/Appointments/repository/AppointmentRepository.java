@@ -1,6 +1,7 @@
 package com.oneHealth.Appointments.repository;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -119,6 +120,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
  List<Appointment> findByDateAndPatientId(LocalDate date, long patientId);
 
 List<Appointment> findByDateAfterAndPatientId(LocalDate currentDate, long patientId);
+
+boolean existsByDoctorIdAndAppointmentTimeAndDate(long doctorId, Time appointmentTime, Date date);
 
 
 
