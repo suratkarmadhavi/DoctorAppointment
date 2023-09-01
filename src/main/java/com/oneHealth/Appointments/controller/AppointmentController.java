@@ -44,16 +44,16 @@ public class AppointmentController {
         try {
 			service.saveDoctorAppointment(appointment);
 		} catch (Exception e) {
-			return new ResponseEntity<>("Appointment Slot Already Booked", HttpStatus.INTERNAL_SERVER_ERROR); 
+			return new ResponseEntity<>("Appointment Slot Already Booked", HttpStatus.CONFLICT); 
 		}
         try {
 			service.savePatientAppointment(appointment);
 		} catch (Exception e) {
-			return new ResponseEntity<>("Appointment Slot Already Booked", HttpStatus.INTERNAL_SERVER_ERROR); 
+			return new ResponseEntity<>("Appointment Slot Already Booked", HttpStatus.CONFLICT); 
 		}
         
         
-        return new ResponseEntity<>("Appointment Saved Successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Appointment Saved Successfully", HttpStatus.CREATED);
     }
    
     
