@@ -152,5 +152,7 @@ public interface AppointmentService
 
 	void savePatientAppointment(Appointment appointment) throws Exception;
 	
+	List<Appointment> getAppointmentTimeForSlots(long doctorId , Date date);
+	
 }
 

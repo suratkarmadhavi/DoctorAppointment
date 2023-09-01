@@ -123,6 +123,8 @@ List<Appointment> findByDateAfterAndPatientId(LocalDate currentDate, long patien
 
 boolean existsByDoctorIdAndAppointmentTimeAndDate(long doctorId, Time appointmentTime, Date date);
 
+List<Appointment> findByDoctorIdAndDate(long doctorId, Date date);
+
 
 
 }

@@ -5,6 +5,8 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -445,8 +447,9 @@ public class AppointmentController {
             return ResponseEntity.ok(appointments);
         }
     }
+    
+    
     @GetMapping("/upcoming-for-patients-all/{patientId}")
-
     public ResponseEntity<List<Appointment>> getUpcomingByPatientId(@PathVariable("patientId") long patientId)
 
     {
@@ -467,6 +470,23 @@ public class AppointmentController {
 
         }
 
+    }
+    
+    
+    @GetMapping("/appointment-times-for-slots")
+    public List<Time> getAppointmentTimes(
+        @RequestParam("doctorId") long doctorId,
+        @RequestParam("date") Date date
+    ) {
+        // Assuming you have a method in your repository to fetch appointments
+        List<Appointment> appointments = service.getAppointmentTimeForSlots(doctorId, date);
+        
+        // Extract appointment times from the list of appointments
+        List<Time> appointmentTimes = appointments.stream()
+            .map(Appointment::getAppointmentTime)
+            .collect(Collectors.toList());
+        
+        return appointmentTimes;
     }
     
 }

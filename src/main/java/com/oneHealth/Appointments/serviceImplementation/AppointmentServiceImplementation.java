@@ -584,6 +584,12 @@ public class AppointmentServiceImplementation implements AppointmentService {
         return Both;
 
     }
+	
+	
+	@Override
+	public List<Appointment> getAppointmentTimeForSlots(long doctorId, Date date) {
+		return repo.findByDoctorIdAndDate(doctorId, date);
+	}
 
 	
 
