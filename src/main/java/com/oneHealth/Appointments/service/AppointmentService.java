@@ -135,24 +135,77 @@ public interface AppointmentService
      */
     Appointment updateAppointment(long appointmentId, Appointment updatedAppointment) throws RecordNotFoundException;
     
+    
+    /**
+     * Retrieves the count of today's appointments for a specific doctor with the given status.
+     *
+     * @param doctorId The ID of the doctor for whom appointments are counted.
+     * @param status   The status of appointments to be counted.
+     * @return long The count of today's appointments for the specified doctor and status.
+     */
     long getTodayAppointmentsCountByDoctorIdAndStatus(long doctorId, String status);
-    
-    
+
+    /**
+     * Retrieves the count of upcoming appointments for a specific doctor with the given status.
+     *
+     * @param doctorId The ID of the doctor for whom appointments are counted.
+     * @param status   The status of appointments to be counted.
+     * @return Long The count of upcoming appointments for the specified doctor and status.
+     */
     Long getCountOfUpcomingAppointmentsByDoctorIdAndStatus(Long doctorId, String status);
-    
+
+    /**
+     * Finds a list of appointments for a specific patient with the given status.
+     *
+     * @param patientId The ID of the patient for whom appointments are retrieved.
+     * @param status    The status of appointments to be retrieved.
+     * @return List<Appointment> A list of appointments for the specified patient and status.
+     */
     List<Appointment> findByPatientIdAndStatus(long patientId, String status);
-    
-    
-    
-    List<Appointment> NotAcceptedAppointmentsForRequest(long doctorId , String status);
 
-	List<Appointment> findUpcomingByPatientId(long patientId);
+    /**
+     * Finds a list of not accepted appointments for a specific doctor with the given status.
+     *
+     * @param doctorId The ID of the doctor for whom appointments are retrieved.
+     * @param status   The status of appointments to be retrieved.
+     * @return List<Appointment> A list of not accepted appointments for the specified doctor and status.
+     */
+    List<Appointment> NotAcceptedAppointmentsForRequest(long doctorId, String status);
 
-	Appointment saveDoctorAppointment(Appointment appointment) throws Exception;
+    /**
+     * Finds a list of upcoming appointments for a specific patient.
+     *
+     * @param patientId The ID of the patient for whom upcoming appointments are retrieved.
+     * @return List<Appointment> A list of upcoming appointments for the specified patient.
+     */
+    List<Appointment> findUpcomingByPatientId(long patientId);
 
-	void savePatientAppointment(Appointment appointment) throws Exception;
-	
-	List<Appointment> getAppointmentTimeForSlots(long doctorId , Date date);
+    /**
+     * Saves a doctor's appointment.
+     *
+     * @param appointment The appointment to be saved.
+     * @return Appointment The saved appointment.
+     * @throws Exception If an error occurs during the saving process.
+     */
+    Appointment saveDoctorAppointment(Appointment appointment) throws Exception;
+
+    /**
+     * Saves a patient's appointment.
+     *
+     * @param appointment The appointment to be saved.
+     * @throws Exception If an error occurs during the saving process.
+     */
+    void savePatientAppointment(Appointment appointment) throws Exception;
+
+    /**
+     * Retrieves a list of appointment times for available slots on a specific date and for a specific doctor.
+     *
+     * @param doctorId The ID of the doctor for whom available slots are retrieved.
+     * @param date     The date for which available slots are retrieved.
+     * @return List<Appointment> A list of appointment times for available slots.
+     */
+    List<Appointment> getAppointmentTimeForSlots(long doctorId, Date date);
+
 	
 }
 

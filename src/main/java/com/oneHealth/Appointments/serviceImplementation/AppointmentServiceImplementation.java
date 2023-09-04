@@ -125,7 +125,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		// Fetch patient details using WebClient
         Patient patientDto = builder.build()
             .get()
-            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/{patient_id}", obj.getPatientId())
+            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/byPatientId/{patient_id}", obj.getPatientId())
             .retrieve()
             .bodyToMono(Patient.class)
             .block();
@@ -174,7 +174,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
 			// Fetch patient details using WebClient
 	        Patient patientDto = builder.build()
 	            .get()
-	            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/{patient_id}", obj.getPatientId())
+	            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/byPatientId/{patient_id}", obj.getPatientId())
 	            .retrieve()
 	            .bodyToMono(Patient.class)
 	            .block();
@@ -505,12 +505,33 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return repo.save(existingAppointment);
 	}
 
+	
+	
+	
+	
+	/**
+	 * Retrieves the count of today's appointments for a specific doctor with the given status.
+	 *
+	 * @param doctorId The ID of the doctor for whom appointments are counted.
+	 * @param status   The status of appointments to be counted.
+	 * @return long The count of today's appointments for the specified doctor and status.
+	 */
 	@Override
 	public long getTodayAppointmentsCountByDoctorIdAndStatus(long doctorId, String status) {
 		LocalDate today = LocalDate.now();
 		return repo.countByDoctorIdAndStatusAndDate(doctorId, status, today);
 	}
 
+	
+	
+	
+	/**
+	 * Retrieves the count of upcoming appointments for a specific doctor with the given status.
+	 *
+	 * @param doctorId The ID of the doctor for whom appointments are counted.
+	 * @param status   The status of appointments to be counted.
+	 * @return Long The count of upcoming appointments for the specified doctor and status.
+	 */
 	@Override
 	public Long getCountOfUpcomingAppointmentsByDoctorIdAndStatus(Long doctorId, String status) {
 		LocalDate todayDate = LocalDate.now();
@@ -518,12 +539,31 @@ public class AppointmentServiceImplementation implements AppointmentService {
 
 		return (long) upcomingAppointments.size();
 	}
+	
 
+	
+	/**
+	 * Finds a list of appointments for a specific patient with the given status.
+	 *
+	 * @param patientId The ID of the patient for whom appointments are retrieved.
+	 * @param status    The status of appointments to be retrieved.
+	 * @return List<Appointment> A list of appointments for the specified patient and status.
+	 */
 	@Override
 	public List<Appointment> findByPatientIdAndStatus(long patientId, String status) {
 		return repo.findByPatientIdAndStatus(patientId, status);
 	}
 
+	
+	
+	
+	/**
+	 * Finds a list of not accepted appointments for a specific doctor with the given status.
+	 *
+	 * @param doctorId The ID of the doctor for whom appointments are retrieved.
+	 * @param status   The status of appointments to be retrieved.
+	 * @return List<Appointment> A list of not accepted appointments for the specified doctor and status.
+	 */
 	@Override
 	public List<Appointment> NotAcceptedAppointmentsForRequest(long doctorId, String status) {
 		LocalDate todayDate = LocalDate.now();
@@ -535,6 +575,14 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return Both;
 	}
 
+	
+	
+	
+	/**
+	 * Creates a dummy appointment for testing purposes.
+	 *
+	 * @return AppointmentDTO A dummy appointment.
+	 */
 	public static AppointmentDTO createDummyAppointment() {
 		AppointmentDTO appointment = new AppointmentDTO();
 		appointment.setAppointment_id(1);
@@ -565,9 +613,16 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return appointment;
 	}
 
+	
+	
+	/**
+	 * Finds a list of upcoming appointments for a specific patient.
+	 *
+	 * @param patientId The ID of the patient for whom upcoming appointments are retrieved.
+	 * @return List<Appointment> A list of upcoming appointments for the specified patient.
+	 */
 	@Override
-
-    public List<Appointment> findUpcomingByPatientId(long patientId) {
+	public List<Appointment> findUpcomingByPatientId(long patientId) {
 
         LocalDate currentDate = LocalDate.now();
 
@@ -586,6 +641,13 @@ public class AppointmentServiceImplementation implements AppointmentService {
     }
 	
 	
+	/**
+	 * Retrieves a list of appointment times for available slots on a specific date and for a specific doctor.
+	 *
+	 * @param doctorId The ID of the doctor for whom available slots are retrieved.
+	 * @param date     The date for which available slots are retrieved.
+	 * @return List<Appointment> A list of appointment times for available slots.
+	 */
 	@Override
 	public List<Appointment> getAppointmentTimeForSlots(long doctorId, Date date) {
 		return repo.findByDoctorIdAndDate(doctorId, date);

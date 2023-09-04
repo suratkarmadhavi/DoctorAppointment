@@ -60,35 +60,6 @@ public class AppointmentController {
    
     
    
-    
-
-
-
-//    /**
-//     * Retrieves a list of appointments for a specific patient.
-//     *
-//     * @param patientId The ID of the patient for whom to retrieve the appointments.
-//     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
-//     */
-//    @GetMapping("/findbypatientid/{id}")
-//    public ResponseEntity<List<Appointment>> findByPatientId(@PathVariable(value = "id") long patientId) {
-//        LOGGER.info("In Controller - Retrieving appointments for patient ID: " + patientId);
-//        List<Appointment> obj = service.findByPatientId(patientId);
-//        return ResponseEntity.ok().body(obj);
-//    }
-//
-//    /**
-//     * Retrieves a list of appointments for a specific doctor.
-//     *
-//     * @param doctorId The ID of the doctor for whom to retrieve the appointments.
-//     * @return ResponseEntity<List<Appointment>> A response containing a list of appointments.
-//     */
-//    @GetMapping("/findbydoctorid/{id}")
-//    public ResponseEntity<List<Appointment>> findByDoctorId(@PathVariable(value = "id") long doctorId) {
-//        LOGGER.info("In Controller - Retrieving appointments for doctor ID: " + doctorId);
-//        List<Appointment> obj = service.findByDoctorId(doctorId);
-//        return ResponseEntity.ok().body(obj);
-//    }
 
     /**
      * Retrieves a list of appointments for a specific doctor with the status "Accepted".
@@ -111,6 +82,9 @@ public class AppointmentController {
         }
     }
 
+    
+    
+    
     /**
      * Retrieves a list of appointments for a specific doctor with the status "Not Accepted".
      *
@@ -133,6 +107,8 @@ public class AppointmentController {
     }
     
     
+    
+    
     /**
      * Retrieves a list of appointments for a specific doctor with the status "Not Accepted".
      *
@@ -153,6 +129,9 @@ public class AppointmentController {
             return ResponseEntity.ok(appointments);
         }
     }
+    
+    
+    
     
     
     /**
@@ -195,6 +174,9 @@ public class AppointmentController {
         return new ResponseEntity<>("Status Updated Successfully", HttpStatus.OK);
     }
 
+    
+    
+    
     /**
      * Updates the date and time of an appointment with the given appointment ID.
      *
@@ -214,6 +196,9 @@ public class AppointmentController {
         return new ResponseEntity<>("Appointment Date and Time Updated Successfully", HttpStatus.OK);
     }
 
+    
+    
+    
     /**
      * Deletes an appointment with the given appointment ID.
      *
@@ -228,6 +213,10 @@ public class AppointmentController {
         return new ResponseEntity<>("Appointment Deleted Successfully", HttpStatus.OK);
     }
 
+    
+    
+    
+    
     /**
      * Retrieves a list of appointments scheduled for today.
      *
@@ -248,6 +237,15 @@ public class AppointmentController {
     
     
     
+    
+    /**
+     * Retrieves a list of upcoming appointments for a specific doctor by their ID, status, and appointment type.
+     *
+     * @param doctorId The ID of the doctor for whom upcoming appointments are retrieved.
+     * @param type     The type of appointments to be retrieved.
+     * @return ResponseEntity<List<Appointment>> A ResponseEntity containing the list of upcoming appointments for the specified doctor.
+     * @throws RecordNotFoundException If no upcoming appointments are found with the specified status, doctor ID, and type.
+     */
     @GetMapping("/upcoming-appointments/doctor/{doctorId}/type/{type}")
     public ResponseEntity<List<Appointment>> getUpcomingAppointmentsByDoctorIdAndStatusAndType(
             @PathVariable long doctorId,
@@ -283,6 +281,13 @@ public class AppointmentController {
     
     
     
+    /**
+     * Retrieves a list of accepted appointments for today for a specific doctor by their ID.
+     *
+     * @param doctorId The ID of the doctor for whom today's accepted appointments are retrieved.
+     * @return ResponseEntity<List<Appointment>> A ResponseEntity containing the list of today's accepted appointments for the specified doctor.
+     * @throws RecordNotFoundException If no appointments are found for today with the specified status and doctor ID.
+     */
     @GetMapping("/appointments-for-today/doctor/{doctorId}")
     public ResponseEntity<List<Appointment>> getAppointmentsForTodayByDoctorIdAndStatus(
             @PathVariable long doctorId) throws RecordNotFoundException {
@@ -344,7 +349,12 @@ public class AppointmentController {
     
     
     
-    
+    /**
+     * Retrieves the count of today's accepted appointments for a specific doctor.
+     *
+     * @param doctorId The ID of the doctor for whom appointments are counted.
+     * @return ResponseEntity<Long> A ResponseEntity containing the count of today's accepted appointments for the specified doctor.
+     */
     @GetMapping("/count/{doctorId}")
     public ResponseEntity<Long> getTodayAppointmentsCountByDoctorAndStatus(
             @PathVariable long doctorId
@@ -357,6 +367,13 @@ public class AppointmentController {
     
     
     
+    
+    /**
+     * Retrieves the count of upcoming accepted appointments for a specific doctor.
+     *
+     * @param doctorId The ID of the doctor for whom appointments are counted.
+     * @return ResponseEntity<Long> A ResponseEntity containing the count of upcoming accepted appointments for the specified doctor.
+     */
     @GetMapping("/count/upcoming/{doctorId}")
     public ResponseEntity<Long> getCountOfUpcomingAppointmentsByDoctorIdAndStatus(
             @PathVariable Long doctorId)
@@ -372,6 +389,12 @@ public class AppointmentController {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     
+    /**
+     * Retrieves a list of completed appointments for a specific patient.
+     *
+     * @param patientId The ID of the patient for whom completed appointments are retrieved.
+     * @return List<Appointment> A list of completed appointments for the specified patient.
+     */
     @GetMapping("/patient/{patientId}/completed")
     public List<Appointment> getAppointmentsByPatientIdAndCompleted(
             @PathVariable long patientId) 
@@ -380,6 +403,13 @@ public class AppointmentController {
     	return service.findByPatientIdAndStatus(patientId, status);
     }
     
+    
+    /**
+     * Retrieves a list of rejected appointments for a specific patient.
+     *
+     * @param patientId The ID of the patient for whom rejected appointments are retrieved.
+     * @return List<Appointment> A list of rejected appointments for the specified patient.
+     */
     @GetMapping("/patient/{patientId}/rejected")
     public List<Appointment> getAppointmentsByPatientIdAndRejected(
             @PathVariable long patientId) 
@@ -388,6 +418,14 @@ public class AppointmentController {
     	return service.findByPatientIdAndStatus(patientId, status);
     }
     
+    
+    
+    /**
+     * Retrieves a list of not accepted appointments for a specific patient.
+     *
+     * @param patientId The ID of the patient for whom not accepted appointments are retrieved.
+     * @return List<Appointment> A list of not accepted appointments for the specified patient.
+     */
     @GetMapping("/patient/{patientId}/NotAccepted")
     public List<Appointment> getAppointmentsByPatientIdAndNotAccepted(
             @PathVariable long patientId) 
@@ -449,6 +487,13 @@ public class AppointmentController {
     }
     
     
+    
+    /**
+     * Retrieves a list of upcoming appointments for a specific patient by their ID.
+     *
+     * @param patientId The ID of the patient for whom upcoming appointments are retrieved.
+     * @return ResponseEntity<List<Appointment>> A ResponseEntity containing the list of upcoming appointments for the specified patient.
+     */
     @GetMapping("/upcoming-for-patients-all/{patientId}")
     public ResponseEntity<List<Appointment>> getUpcomingByPatientId(@PathVariable("patientId") long patientId)
 
@@ -473,6 +518,14 @@ public class AppointmentController {
     }
     
     
+    
+    /**
+     * Retrieves a list of appointment times for available slots on a specific date and for a specific doctor.
+     *
+     * @param doctorId The ID of the doctor for whom available slots are retrieved.
+     * @param date     The date for which available slots are retrieved.
+     * @return List<Time> A list of appointment times for available slots.
+     */
     @GetMapping("/appointment-times-for-slots")
     public List<Time> getAppointmentTimes(
         @RequestParam("doctorId") long doctorId,

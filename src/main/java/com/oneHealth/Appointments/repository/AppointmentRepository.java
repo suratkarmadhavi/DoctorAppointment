@@ -113,16 +113,61 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
  List<Appointment> findByDateAfterAndPatientIdAndStatus(Date date, long patientId, String status);
  
  
+ /**
+  * Retrieves a count of upcoming appointments for a specific date, Doctor ID, and status.
+  *
+  * @param date The specific date for which to retrieve upcoming appointments.
+  * @param doctorId The ID of the patient for whom to retrieve the appointments.
+  * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+  * @return A count of upcoming appointments matching the specified criteria.
+  */
  long countByDoctorIdAndStatusAndDate(long doctorId, String status, LocalDate date);
  
+ 
+ /**
+  * Retrieves a list of appointments for a patient ID, and status.
+  *
+  * @param patientId The ID of the patient for whom to retrieve the appointments.
+  * @param status The status of the appointments to retrieve (e.g., "Accepted", "Pending", etc.).
+  * @return List<Appointment> A list of appointments matching the specified criteria.
+  */
  List<Appointment> findByPatientIdAndStatus(long patientId, String status);
  
+ 
+ /**
+  * Retrieves a list of upcoming appointments for a specific date, patient ID.
+  *
+  * @param date The specific date for which to retrieve upcoming appointments.
+  * @param patientId The ID of the patient for whom to retrieve the appointments.
+  * @return List<Appointment> A list of upcoming appointments matching the specified criteria.
+  */
  List<Appointment> findByDateAndPatientId(LocalDate date, long patientId);
 
+ 
+ /**
+  * Retrieves a list of upcoming appointments for a specific date, patient ID.
+  *
+  * @param date The specific date for which to retrieve upcoming appointments.
+  * @param patientId The ID of the patient for whom to retrieve the appointments.
+  * @return List<Appointment> A list of upcoming appointments matching the specified criteria.
+  */
 List<Appointment> findByDateAfterAndPatientId(LocalDate currentDate, long patientId);
 
+
+
+/**
+ * Checks If Appointment Already exists or not
+ */
 boolean existsByDoctorIdAndAppointmentTimeAndDate(long doctorId, Time appointmentTime, Date date);
 
+
+/**
+ * Retrieves a list of appointments for a specific date, doctor ID.
+ *
+ * @param date The specific date for which to retrieve upcoming appointments.
+ * @param patientId The ID of the patient for whom to retrieve the appointments.
+ * @return List<Appointment> A list of appointments matching the specified criteria.
+ */
 List<Appointment> findByDoctorIdAndDate(long doctorId, Date date);
 
 
