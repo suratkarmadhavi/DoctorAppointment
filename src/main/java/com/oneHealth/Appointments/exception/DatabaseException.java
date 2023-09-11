@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * This exception is thrown when there is an issue related to database operations.
  * It is annotated with @ResponseStatus to set the HTTP status code to UNPROCESSABLE_ENTITY (422) when this exception is thrown.
  * @author Anup
- * @version 3.9.10
+ * @version 1.0
  */
 @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
 public class DatabaseException extends Exception

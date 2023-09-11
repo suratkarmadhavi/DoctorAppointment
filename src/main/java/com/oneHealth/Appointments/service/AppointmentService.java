@@ -12,7 +12,7 @@ import com.oneHealth.Appointments.exception.RecordNotFoundException;
 /**
  * Service interface for handling appointment-related operations.
  * @author Anup
- * @version 3.9.10
+ * @version 1.0
  */
 public interface AppointmentService 
 {

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * This exception is annotated with @ResponseStatus, indicating that it will trigger a 404 NOT_FOUND response
  * when thrown.
  * @author Anup
- * @version 3.9.10
+ * @version 1.0
  */
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class ProfileNotFoundException extends Exception {

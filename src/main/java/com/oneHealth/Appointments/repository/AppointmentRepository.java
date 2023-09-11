@@ -16,7 +16,7 @@ import com.oneHealth.Appointments.entity.Appointment;
  * CRUD operations on the Appointment table.
  * 
  * @author Anup
- * @version 3.9.10
+ * @version 1.0
  */
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 

@@ -32,7 +32,7 @@ import com.oneHealth.Appointments.service.AppointmentService;
  * appointment-related operations.
  * 
  * @author Anup
- * @version 3.9.10
+ * @version 1.0
  */
 @Service
 public class AppointmentServiceImplementation implements AppointmentService {

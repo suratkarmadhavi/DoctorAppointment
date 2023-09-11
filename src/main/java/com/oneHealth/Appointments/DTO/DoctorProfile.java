@@ -1,69 +1,48 @@
 package com.oneHealth.Appointments.DTO;
-
+//Import necessary Java class for Date handling.
 import java.sql.Date;
 
 /**
- * This class represents the DoctorProfile entity used to store information about a doctor's profile.
- * Doctors' personal details, qualifications, experience, and document links are stored as attributes.
- * @author Anup
- * @version 3.9.10
- */
-
+* This class represents the DoctorProfile entity used to store information about a doctor's profile.
+* Doctors' personal details, qualifications, experience, and document links are stored as attributes.
+* 
+* @author Anup
+* @version 1.0
+*/
 public class DoctorProfile 
 {
 	// Primary key for the entity. The @Id annotation marks this field as the primary key.
-
 	private long doctor_id;
 	
 	private String first_name;
-	
 	private String last_name;
-	
 	private String email;
-	
 	private String contact;
-	
 	private String city;
-
-	
 	private String specialization;
-	
 	private String license_number;
-	
 	private Date birth_date;
-	
 	private String gender;
-	
 	private String blood_group;
-	
 	private String degree;
-	
-	
 	private int passout_year;
-	
 	private String university;
-	
 	private String biography;
-	
-	
 	private float experiance;
-	
 	private String photoId;
-	
 	private String panId;
-	
 	private String aadharId;
-	
 	
 	// Default constructor required by JPA. Should be available for every entity.
 	public DoctorProfile() 
 	{
-		
+		// Default constructor
 	}
 
+	// Parameterized constructor for DoctorProfile class to initialize all fields.
 	public DoctorProfile(long doctor_id, String first_name, String last_name, String email, String contact, String city ,
 			String specialization, String license_number, Date birth_date, String gender, String blood_group,
-			String degree, int passout_year, String university, String biography, int experiance, String photoId,
+			String degree, int passout_year, String university, String biography, float experiance, String photoId,
 			String panId, String aadharId) {
 		super();
 		this.doctor_id = doctor_id;
@@ -85,9 +64,9 @@ public class DoctorProfile
 		this.photoId = photoId;
 		this.panId = panId;
 		this.aadharId = aadharId;
-		
 	}
 
+	// Getter and setter methods for each attribute.
 	public long getDoctor_id() {
 		return doctor_id;
 	}
@@ -128,19 +107,12 @@ public class DoctorProfile
 		this.contact = contact;
 	}
 	
-	
-	
-
 	public String getCity() {
 		return city;
 	}
 
 	public void setCity(String city) {
 		this.city = city;
-	}
-
-	public void setLicense_number(String license_number) {
-		this.license_number = license_number;
 	}
 
 	public String getSpecialization() {
@@ -155,7 +127,7 @@ public class DoctorProfile
 		return license_number;
 	}
 
-	public void setLicense_nummber(String license_number) {
+	public void setLicense_number(String license_number) {
 		this.license_number = license_number;
 	}
 
@@ -247,6 +219,7 @@ public class DoctorProfile
 		this.aadharId = aadharId;
 	}
 
+	// Override the toString method to provide a human-readable representation of the object.
 	@Override
 	public String toString() {
 		return "DoctorProfile [doctor_id=" + doctor_id + ", first_name=" + first_name + ", last_name=" + last_name
@@ -256,11 +229,4 @@ public class DoctorProfile
 				+ ", university=" + university + ", biography=" + biography + ", experiance=" + experiance
 				+ ", photoId=" + photoId + ", panId=" + panId + ", aadharId=" + aadharId + "]";
 	}
-
-	
-	
-	
-	
-	
-	
 }

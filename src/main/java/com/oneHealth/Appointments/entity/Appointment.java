@@ -13,7 +13,7 @@ import jakarta.persistence.Id;
  * Entity class representing an appointment.
  * This class is mapped to a database table to store appointment details.
  * @author Anup
- * @version 3.9.10
+ * @version 1.0
  */
 @Entity
 public class Appointment 

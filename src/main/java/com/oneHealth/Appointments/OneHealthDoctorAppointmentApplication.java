@@ -9,31 +9,33 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 /**
+ * This is the main class for the OneHealthDoctorAppointmentApplication.
+ * It is annotated with @SpringBootApplication, indicating that it's a Spring Boot application.
+ * It's also annotated with @RestController, indicating that it's a RESTful controller.
  * 
  * @author Anup
- * @version 3.9.10
+ * @version 1.0
  */
 @SpringBootApplication
 @RestController
 public class OneHealthDoctorAppointmentApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(OneHealthDoctorAppointmentApplication.class, args);
-	}
-	@GetMapping
-	public String Welcome() {
-		
-		return "Welcome From OneHealth Team (OneHealth-DoctorAppointmentService)!!!";
-	}
-	
-	@Bean
-	public ModelMapper modelMapper() {
-	 return new ModelMapper();
-	}
-	
-//	@Bean
-//	public RestTemplate getRestTemplate() {
-//	 return new RestTemplate();
-//	}
+    public static void main(String[] args) {
+        // This method starts the Spring Boot application.
+        SpringApplication.run(OneHealthDoctorAppointmentApplication.class, args);
+    }
 
+    @GetMapping
+    public String Welcome() {
+        // This method handles GET requests to the root URL and returns a welcome message.
+        return "Welcome From OneHealth Team (OneHealth-DoctorAppointmentService)!!!";
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        // This method creates and configures a ModelMapper bean.
+        return new ModelMapper();
+    }
+
+   
 }

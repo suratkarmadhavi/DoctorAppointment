@@ -24,7 +24,7 @@ import com.oneHealth.Appointments.service.AppointmentService;
  * application.
  * 
  * @author Anup
- * @version 3.9.10
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/api/doctors/appointment")
