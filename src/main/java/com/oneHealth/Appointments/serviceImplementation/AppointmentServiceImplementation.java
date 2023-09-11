@@ -47,36 +47,29 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	@Autowired
 	private ModelMapper mapper;
 
-
 	public boolean isDuplicateAppointmentExists(long doctorId, Time appointmentTime, Date date) {
-        return repo.existsByDoctorIdAndAppointmentTimeAndDate(doctorId, appointmentTime, date);
-    }
+		return repo.existsByDoctorIdAndAppointmentTimeAndDate(doctorId, appointmentTime, date);
+	}
+
 	/**
 	 * Saves the details of a new appointment into the database.
 	 *
 	 * @param obj The Appointment object to be saved.
 	 * @return The saved Appointment object.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Override
 	public Appointment saveAppointment(Appointment obj) throws Exception {
 		LOGGER.info("In Service - Saving appointment: " + obj);
-		
-		if (isDuplicateAppointmentExists(
-                obj.getDoctorId(), 
-                obj.getAppointmentTime(), 
-                obj.getDate())) {
-            throw new Exception("Duplicate appointment found");
-        }
+
+		if (isDuplicateAppointmentExists(obj.getDoctorId(), obj.getAppointmentTime(), obj.getDate())) {
+			throw new Exception("Duplicate appointment found");
+		}
 
 		// Fetch patient details using WebClient
-        Patient patientDto = builder.build()
-            .get()
-            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/{patient_id}", obj.getPatientId())
-            .retrieve()
-            .bodyToMono(Patient.class)
-            .block();
-
+		Patient patientDto = builder.build().get().uri(
+				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/{patient_id}",
+				obj.getPatientId()).retrieve().bodyToMono(Patient.class).block();
 
 		System.out.println(patientDto);
 
@@ -98,8 +91,10 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		dto.setDoctor_email(profile.getEmail());
 
 		// Prepare and send appointment email using WebClient
-		WebClient.ResponseSpec responseSpec = builder.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build().post()
-				.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the request
+		WebClient.ResponseSpec responseSpec = builder
+				.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build()
+				.post().uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
+																								// request
 
 		// Send the request and handle the response
 		responseSpec.toBodilessEntity().subscribe();
@@ -108,28 +103,19 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return repo.save(obj);
 	}
 
-	
-	
-	
 	@Override
 	public Appointment saveDoctorAppointment(Appointment obj) throws Exception {
 		LOGGER.info("In Service - Saving appointment: " + obj);
-		
-		if (isDuplicateAppointmentExists(
-                obj.getDoctorId(), 
-                obj.getAppointmentTime(), 
-                obj.getDate())) {
-            throw new Exception("Duplicate appointment found");
-        }
+
+		if (isDuplicateAppointmentExists(obj.getDoctorId(), obj.getAppointmentTime(), obj.getDate())) {
+			throw new Exception("Duplicate appointment found");
+		}
 
 		// Fetch patient details using WebClient
-        Patient patientDto = builder.build()
-            .get()
-            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/byPatientId/{patient_id}", obj.getPatientId())
-            .retrieve()
-            .bodyToMono(Patient.class)
-            .block();
-        System.out.println(patientDto);
+		Patient patientDto = builder.build().get().uri(
+				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/byPatientId/{patient_id}",
+				obj.getPatientId()).retrieve().bodyToMono(Patient.class).block();
+		System.out.println(patientDto);
 
 		// Fetch doctor profile using WebClient
 		DoctorProfile profile = builder.build().get().uri(
@@ -149,8 +135,10 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		dto.setDoctor_email(profile.getEmail());
 
 		// Prepare and send appointment email using WebClient
-		WebClient.ResponseSpec responseSpec = builder.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build().post()
-				.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the request
+		WebClient.ResponseSpec responseSpec = builder
+				.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build()
+				.post().uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
+																								// request
 
 		// Send the request and handle the response
 		responseSpec.toBodilessEntity().subscribe();
@@ -161,9 +149,9 @@ public class AppointmentServiceImplementation implements AppointmentService {
 
 	@Override
 	public void savePatientAppointment(Appointment obj) throws Exception {
-		
-			LOGGER.info("In Service - Saving appointment: " + obj);
-			
+
+		LOGGER.info("In Service - Saving appointment: " + obj);
+
 //			if (isDuplicateAppointmentExists(
 //	                obj.getDoctorId(), 
 //	                obj.getAppointmentTime(), 
@@ -171,51 +159,42 @@ public class AppointmentServiceImplementation implements AppointmentService {
 //	            throw new Exception("Duplicate appointment found");
 //	        }
 
-			// Fetch patient details using WebClient
-	        Patient patientDto = builder.build()
-	            .get()
-	            .uri("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/byPatientId/{patient_id}", obj.getPatientId())
-	            .retrieve()
-	            .bodyToMono(Patient.class)
-	            .block();
-	        System.out.println(patientDto);
+		// Fetch patient details using WebClient
+		Patient patientDto = builder.build().get().uri(
+				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/byPatientId/{patient_id}",
+				obj.getPatientId()).retrieve().bodyToMono(Patient.class).block();
+		System.out.println(patientDto);
 
-			// Fetch doctor profile using WebClient
-			DoctorProfile profile = builder.build().get().uri(
-					"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
-					obj.getDoctorId()).retrieve().bodyToMono(DoctorProfile.class).block();
-			System.out.println(profile);
+		// Fetch doctor profile using WebClient
+		DoctorProfile profile = builder.build().get().uri(
+				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
+				obj.getDoctorId()).retrieve().bodyToMono(DoctorProfile.class).block();
+		System.out.println(profile);
 
-			// Create an AppointmentDTO and map relevant fields
-			AppointmentDTO dto = new AppointmentDTO();
-			mapper.map(obj, dto);
-			dto.setDoctor_name(profile.getFirst_name() + " " + profile.getLast_name());
-			dto.setContact(profile.getContact());
+		// Create an AppointmentDTO and map relevant fields
+		AppointmentDTO dto = new AppointmentDTO();
+		mapper.map(obj, dto);
+		dto.setDoctor_name(profile.getFirst_name() + " " + profile.getLast_name());
+		dto.setContact(profile.getContact());
 
-			// Set patient and doctor email addresses (you might want to dynamically fetch
-			// patient email)
-			dto.setPatient_email(patientDto.getEmailId());
-			dto.setDoctor_email(profile.getEmail());
+		// Set patient and doctor email addresses (you might want to dynamically fetch
+		// patient email)
+		dto.setPatient_email(patientDto.getEmailId());
+		dto.setDoctor_email(profile.getEmail());
 
-			// Prepare and send appointment email using WebClient
-			WebClient.ResponseSpec responseSpec = builder.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build().post()
-					.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the request
+		// Prepare and send appointment email using WebClient
+		WebClient.ResponseSpec responseSpec = builder
+				.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build()
+				.post().uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
+																								// request
 
-			// Send the request and handle the response
-			responseSpec.toBodilessEntity().subscribe();
+		// Send the request and handle the response
+		responseSpec.toBodilessEntity().subscribe();
 
-			// Save the appointment details to the repository
-			//return repo.save(obj);
-		}
+		// Save the appointment details to the repository
+		// return repo.save(obj);
+	}
 
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * Retrieves a list of appointments for a specific patient ID.
 	 *
@@ -390,24 +369,28 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	 *         and type.
 	 * @throws RecordNotFoundException If no upcoming appointments are found.
 	 */
-	@Override
-	public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String status,
-			String type) throws RecordNotFoundException {
-		LOGGER.info("In Service - Retrieving upcoming appointments for Doctor ID: " + doctorId + " with status: "
-				+ status + " and type: " + type);
-		Date todayDate = Date.valueOf(LocalDate.now());
-		List<Appointment> upcomingAppointments = repo.findByDateAfterAndDoctorIdAndStatusAndType(todayDate, doctorId,
-				status, type);
-
-		if (upcomingAppointments.isEmpty()) {
-			LOGGER.warning("In Service - No upcoming appointments found for Doctor ID: " + doctorId + " with status: "
-					+ status + " and type: " + type);
-			throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId
-					+ " with status: " + status + " and type: " + type);
-		}
-
-		return upcomingAppointments;
-	}
+//	@Override
+//	public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String status,
+//			String type) throws RecordNotFoundException {
+//		LOGGER.info("Doctor ID: " + doctorId);
+//		LOGGER.info("Status: " + status);
+//		LOGGER.info("Type: " + type);
+//
+//		Date todayDate = Date.valueOf(LocalDate.now());
+//		LOGGER.info("Today's Date: " + todayDate);
+//
+//		List<Appointment> upcomingAppointments = repo.findByDateAndDoctorIdAndStatusAndType(todayDate, doctorId, status,
+//				type);
+//
+//		if (upcomingAppointments.isEmpty()) {
+//			LOGGER.warning("In Service - No upcoming appointments found for Doctor ID: " + doctorId + " with status: "
+//					+ status + " and type: " + type);
+//			throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId
+//					+ " with status: " + status + " and type: " + type);
+//		}
+//
+//		return upcomingAppointments;
+//	}
 
 	/**
 	 * Retrieves a list of appointments for the current day by doctor ID and status.
@@ -505,16 +488,14 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return repo.save(existingAppointment);
 	}
 
-	
-	
-	
-	
 	/**
-	 * Retrieves the count of today's appointments for a specific doctor with the given status.
+	 * Retrieves the count of today's appointments for a specific doctor with the
+	 * given status.
 	 *
 	 * @param doctorId The ID of the doctor for whom appointments are counted.
 	 * @param status   The status of appointments to be counted.
-	 * @return long The count of today's appointments for the specified doctor and status.
+	 * @return long The count of today's appointments for the specified doctor and
+	 *         status.
 	 */
 	@Override
 	public long getTodayAppointmentsCountByDoctorIdAndStatus(long doctorId, String status) {
@@ -522,15 +503,14 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return repo.countByDoctorIdAndStatusAndDate(doctorId, status, today);
 	}
 
-	
-	
-	
 	/**
-	 * Retrieves the count of upcoming appointments for a specific doctor with the given status.
+	 * Retrieves the count of upcoming appointments for a specific doctor with the
+	 * given status.
 	 *
 	 * @param doctorId The ID of the doctor for whom appointments are counted.
 	 * @param status   The status of appointments to be counted.
-	 * @return Long The count of upcoming appointments for the specified doctor and status.
+	 * @return Long The count of upcoming appointments for the specified doctor and
+	 *         status.
 	 */
 	@Override
 	public Long getCountOfUpcomingAppointmentsByDoctorIdAndStatus(Long doctorId, String status) {
@@ -539,30 +519,28 @@ public class AppointmentServiceImplementation implements AppointmentService {
 
 		return (long) upcomingAppointments.size();
 	}
-	
 
-	
 	/**
 	 * Finds a list of appointments for a specific patient with the given status.
 	 *
 	 * @param patientId The ID of the patient for whom appointments are retrieved.
 	 * @param status    The status of appointments to be retrieved.
-	 * @return List<Appointment> A list of appointments for the specified patient and status.
+	 * @return List<Appointment> A list of appointments for the specified patient
+	 *         and status.
 	 */
 	@Override
 	public List<Appointment> findByPatientIdAndStatus(long patientId, String status) {
 		return repo.findByPatientIdAndStatus(patientId, status);
 	}
 
-	
-	
-	
 	/**
-	 * Finds a list of not accepted appointments for a specific doctor with the given status.
+	 * Finds a list of not accepted appointments for a specific doctor with the
+	 * given status.
 	 *
 	 * @param doctorId The ID of the doctor for whom appointments are retrieved.
 	 * @param status   The status of appointments to be retrieved.
-	 * @return List<Appointment> A list of not accepted appointments for the specified doctor and status.
+	 * @return List<Appointment> A list of not accepted appointments for the
+	 *         specified doctor and status.
 	 */
 	@Override
 	public List<Appointment> NotAcceptedAppointmentsForRequest(long doctorId, String status) {
@@ -575,9 +553,6 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return Both;
 	}
 
-	
-	
-	
 	/**
 	 * Creates a dummy appointment for testing purposes.
 	 *
@@ -613,36 +588,36 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		return appointment;
 	}
 
-	
-	
 	/**
 	 * Finds a list of upcoming appointments for a specific patient.
 	 *
-	 * @param patientId The ID of the patient for whom upcoming appointments are retrieved.
-	 * @return List<Appointment> A list of upcoming appointments for the specified patient.
+	 * @param patientId The ID of the patient for whom upcoming appointments are
+	 *                  retrieved.
+	 * @return List<Appointment> A list of upcoming appointments for the specified
+	 *         patient.
 	 */
 	@Override
 	public List<Appointment> findUpcomingByPatientId(long patientId) {
 
-        LocalDate currentDate = LocalDate.now();
+		LocalDate currentDate = LocalDate.now();
 
-        List<Appointment>upcoming = repo.findByDateAfterAndPatientId(currentDate, patientId);
+		List<Appointment> upcoming = repo.findByDateAfterAndPatientId(currentDate, patientId);
 
-        List<Appointment>today = repo.findByDateAndPatientId(currentDate, patientId);
+		List<Appointment> today = repo.findByDateAndPatientId(currentDate, patientId);
 
-        List<Appointment>Both = new ArrayList<>();
+		List<Appointment> Both = new ArrayList<>();
 
-        Both.addAll(upcoming);
+		Both.addAll(upcoming);
 
-        Both.addAll(today);
+		Both.addAll(today);
 
-        return Both;
+		return Both;
 
-    }
-	
-	
+	}
+
 	/**
-	 * Retrieves a list of appointment times for available slots on a specific date and for a specific doctor.
+	 * Retrieves a list of appointment times for available slots on a specific date
+	 * and for a specific doctor.
 	 *
 	 * @param doctorId The ID of the doctor for whom available slots are retrieved.
 	 * @param date     The date for which available slots are retrieved.
@@ -652,7 +627,40 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	public List<Appointment> getAppointmentTimeForSlots(long doctorId, Date date) {
 		return repo.findByDoctorIdAndDate(doctorId, date);
 	}
-
 	
+//	=====
+	
+	
+
+	    public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(
+	        long doctorId,
+	        String type,String status
+	    ) throws RecordNotFoundException {
+	        Date todayDate = Date.valueOf(LocalDate.now());
+	        LOGGER.info("1111111111111111111111");
+	        LOGGER.info("Doctor ID: " + doctorId);
+	        LOGGER.info("Type: " + type);
+	        LOGGER.info("Status: " + status);
+	        LOGGER.info("Today's Date: " + todayDate);
+
+	        List<Appointment> upcomingAppointments = repo.findAllAppointmentsByDoctorIdAndTypeAndStatusAndDate(
+	            doctorId,
+	            type,
+	            status,
+	            todayDate
+	        );
+//	        repo.findByIdIgnoreCaseSensetivity(status)
+
+	        if (upcomingAppointments.isEmpty()) {
+	            LOGGER.warning("In Service - No upcoming appointments found for Doctor ID: " + doctorId +
+	                " with c: "  + " and type: " + type);
+	            throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId +
+	                " with status: "  + " and type: " + type);
+	        }
+
+	        return upcomingAppointments;
+	    }
+	
+
 
 }

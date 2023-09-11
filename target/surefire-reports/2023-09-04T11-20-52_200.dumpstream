@@ -1,5 +1,0 @@
-# Created at 2023-09-04T11:20:53.367
-Boot Manifest-JAR contains absolute paths in classpath 'D:\OneHealth-Access\DoctorAppointment\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-

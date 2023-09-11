@@ -92,7 +92,8 @@ public interface AppointmentService
      * @return List of Appointment objects for the specified doctor, status, and type.
      * @throws RecordNotFoundException if no upcoming appointments found for the doctor, status, and type.
      */
-    List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String status, String type) throws RecordNotFoundException;
+//    List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String status, String type) throws RecordNotFoundException;
+    List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String type,String Status) throws RecordNotFoundException;
 
     
     /**

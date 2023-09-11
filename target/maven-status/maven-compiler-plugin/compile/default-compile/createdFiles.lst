@@ -1,0 +1,14 @@
+com\oneHealth\Appointments\config\AppointmentConfig.class
+com\oneHealth\Appointments\DTO\DoctorProfile.class
+com\oneHealth\Appointments\serviceImplementation\AppointmentServiceImplementation.class
+com\oneHealth\Appointments\DTO\AppointmentDTO.class
+com\oneHealth\Appointments\exception\DatabaseException.class
+com\oneHealth\Appointments\entity\Appointment.class
+com\oneHealth\Appointments\exception\ProfileNotFoundException.class
+com\oneHealth\Appointments\DTO\ErrorMessageDTO.class
+com\oneHealth\Appointments\controller\AppointmentController.class
+com\oneHealth\Appointments\DTO\Patient.class
+com\oneHealth\Appointments\service\AppointmentService.class
+com\oneHealth\Appointments\repository\AppointmentRepository.class
+com\oneHealth\Appointments\exception\RecordNotFoundException.class
+com\oneHealth\Appointments\OneHealthDoctorAppointmentApplication.class
