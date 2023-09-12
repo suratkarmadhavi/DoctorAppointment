@@ -22,7 +22,7 @@ import com.oneHealth.Appointments.DTO.AppointmentDTO;
 import com.oneHealth.Appointments.DTO.DoctorProfile;
 import com.oneHealth.Appointments.DTO.Patient;
 import com.oneHealth.Appointments.entity.Appointment;
-import com.oneHealth.Appointments.exception.ProfileNotFoundException;
+import com.oneHealth.Appointments.exception.AppointmentNotFoundException;
 import com.oneHealth.Appointments.exception.RecordNotFoundException;
 import com.oneHealth.Appointments.repository.AppointmentRepository;
 import com.oneHealth.Appointments.service.AppointmentService;
@@ -252,14 +252,14 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	 *
 	 * @param appointment_id The ID of the appointment.
 	 * @param newStatus      The new status to update.
-	 * @throws ProfileNotFoundException If no appointment is found with the given
+	 * @throws AppointmentNotFoundException If no appointment is found with the given
 	 *                                  ID.
 	 */
 	@Override
-	public void updateAppointmentStatus(long appointment_id, String newStatus) throws ProfileNotFoundException {
+	public void updateAppointmentStatus(long appointment_id, String newStatus) throws AppointmentNotFoundException {
 		LOGGER.info("In Service - Updating appointment status for ID: " + appointment_id + " to: " + newStatus);
 		Appointment appointment = repo.findById(appointment_id)
-				.orElseThrow(() -> new ProfileNotFoundException("Appointment not found with ID: " + appointment_id));
+				.orElseThrow(() -> new AppointmentNotFoundException("Appointment not found with ID: " + appointment_id));
 
 		appointment.setStatus(newStatus);
 		repo.save(appointment);
@@ -625,41 +625,67 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	 */
 	@Override
 	public List<Appointment> getAppointmentTimeForSlots(long doctorId, Date date) {
-		return repo.findByDoctorIdAndDate(doctorId, date);
+	    return repo.findByDoctorIdAndDate(doctorId, date);
+	}
+
+	/**
+	 * Retrieves a list of upcoming appointments for a specific doctor based on the given status and type.
+	 *
+	 * @param doctorId The ID of the doctor for whom upcoming appointments are retrieved.
+	 * @param type     The type of appointments to retrieve (e.g., "regular" or "special").
+	 * @param status   The status of appointments to retrieve (e.g., "scheduled" or "confirmed").
+	 * @return List<Appointment> A list of upcoming appointments.
+	 * @throws RecordNotFoundException if no upcoming appointments are found for the specified criteria.
+	 */
+	public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(
+	    long doctorId,
+	    String type,
+	    String status
+	) throws RecordNotFoundException {
+	    Date todayDate = Date.valueOf(LocalDate.now());
+	    LOGGER.info("Doctor ID: " + doctorId);
+	    LOGGER.info("Type: " + type);
+	    LOGGER.info("Status: " + status);
+	    LOGGER.info("Today's Date: " + todayDate);
+
+	    List<Appointment> upcomingAppointments = repo.findAllAppointmentsByDoctorIdAndTypeAndStatusAndDate(
+	        doctorId,
+	        type,
+	        status,
+	        todayDate
+	    );
+
+	    if (upcomingAppointments.isEmpty()) {
+	        LOGGER.warning("In Service - No upcoming appointments found for Doctor ID: " + doctorId +
+	            " with status: "  + status + " and type: " + type);
+	        throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId +
+	            " with status: "  + status + " and type: " + type);
+	    }
+
+	    return upcomingAppointments;
 	}
 	
-//	=====
-	
 	
 
-	    public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(
-	        long doctorId,
-	        String type,String status
-	    ) throws RecordNotFoundException {
-	        Date todayDate = Date.valueOf(LocalDate.now());
-	        LOGGER.info("1111111111111111111111");
-	        LOGGER.info("Doctor ID: " + doctorId);
-	        LOGGER.info("Type: " + type);
-	        LOGGER.info("Status: " + status);
-	        LOGGER.info("Today's Date: " + todayDate);
+	/**
+	 * Retrieves an appointment by its ID.
+	 *
+	 * @param appointment_id The ID of the appointment to retrieve.
+	 * @return Appointment The appointment with the specified ID.
+	 * @throws RecordNotFoundException if no appointment is found with the given ID.
+	 */
+	@Override
+	public Appointment getAppointmentById(long appointment_id) throws RecordNotFoundException {
+	    Appointment appointment = repo.findById(appointment_id)
+	            .orElseThrow(() -> new RecordNotFoundException("No Appointment Found with this ID " + appointment_id));
+	    LOGGER.info("In Service - Appointment Retrieved: " + appointment);
+	    return appointment;
+	}
 
-	        List<Appointment> upcomingAppointments = repo.findAllAppointmentsByDoctorIdAndTypeAndStatusAndDate(
-	            doctorId,
-	            type,
-	            status,
-	            todayDate
-	        );
-//	        repo.findByIdIgnoreCaseSensetivity(status)
+		
 
-	        if (upcomingAppointments.isEmpty()) {
-	            LOGGER.warning("In Service - No upcoming appointments found for Doctor ID: " + doctorId +
-	                " with c: "  + " and type: " + type);
-	            throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId +
-	                " with status: "  + " and type: " + type);
-	        }
+	   
 
-	        return upcomingAppointments;
-	    }
 	
 
 

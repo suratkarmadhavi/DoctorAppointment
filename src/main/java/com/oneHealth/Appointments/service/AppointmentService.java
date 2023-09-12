@@ -6,7 +6,7 @@ import java.sql.Time;
 import java.util.List;
 
 import com.oneHealth.Appointments.entity.Appointment;
-import com.oneHealth.Appointments.exception.ProfileNotFoundException;
+import com.oneHealth.Appointments.exception.AppointmentNotFoundException;
 import com.oneHealth.Appointments.exception.RecordNotFoundException;
 
 /**
@@ -21,7 +21,9 @@ public interface AppointmentService
      * @throws Exception 
      */
     Appointment saveAppointment(Appointment obj) throws Exception;
-
+    
+    
+    
     /**
      * Find an appointment by patient ID.
      */
@@ -45,7 +47,7 @@ public interface AppointmentService
     /**
      * Update the status of an appointment by appointment ID.
      */
-    void updateAppointmentStatus(long appointmentId, String newStatus) throws ProfileNotFoundException;
+    void updateAppointmentStatus(long appointmentId, String newStatus) throws AppointmentNotFoundException;
 
     /**
      * Update the date and time of an appointment by appointment ID.
@@ -206,6 +208,16 @@ public interface AppointmentService
      * @return List<Appointment> A list of appointment times for available slots.
      */
     List<Appointment> getAppointmentTimeForSlots(long doctorId, Date date);
+
+    
+    /**
+     * Retrieves an appointment by its ID.
+     *
+     * @param appointmentId The ID of the appointment to retrieve.
+     * @return Appointment The appointment with the specified ID.
+     * @throws RecordNotFoundException if no appointment is found with the given ID.
+     */
+    Appointment getAppointmentById(long appointment_id) throws RecordNotFoundException;
 
 	
 }

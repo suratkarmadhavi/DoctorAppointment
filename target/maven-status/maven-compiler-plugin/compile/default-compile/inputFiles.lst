@@ -3,11 +3,11 @@ D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\A
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\entity\Appointment.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\service\AppointmentService.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\controller\AppointmentController.java
+D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\exception\AppointmentNotFoundException.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\exception\DatabaseException.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\DTO\Patient.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\DTO\DoctorProfile.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\config\AppointmentConfig.java
-D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\exception\ProfileNotFoundException.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\DTO\ErrorMessageDTO.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\OneHealthDoctorAppointmentApplication.java
 D:\InfobellIT_Projects\OneHealth\DoctorAppointment\src\main\java\com\oneHealth\Appointments\exception\RecordNotFoundException.java

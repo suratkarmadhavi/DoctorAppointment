@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import com.oneHealth.Appointments.entity.Appointment;
-import com.oneHealth.Appointments.exception.ProfileNotFoundException;
+import com.oneHealth.Appointments.exception.AppointmentNotFoundException;
 import com.oneHealth.Appointments.exception.RecordNotFoundException;
 import com.oneHealth.Appointments.service.AppointmentService;
 
@@ -60,6 +61,36 @@ public class AppointmentController {
 		return new ResponseEntity<>("Appointment Saved Successfully", HttpStatus.CREATED);
 	}
 
+	
+
+	/**
+	 * Retrieves an appointment by its ID.
+	 *
+	 * @param appointment_id The ID of the appointment to retrieve.
+	 * @return ResponseEntity<Appointment> A response entity containing the appointment with the specified ID,
+	 *                                    or a 404 Not Found response if the appointment does not exist.
+	 */
+	@GetMapping("/getAppointment/{appointment_id}")
+	public ResponseEntity<Appointment> getAppointmentById(@PathVariable(value = "appointment_id") int appointment_id) {
+	    try {
+	        Appointment appointment = service.getAppointmentById(appointment_id);
+
+	        if (appointment != null) {
+	            // Return a 200 OK response with the appointment object
+	            return ResponseEntity.ok(appointment);
+	        } else {
+	            // Return a 404 Not Found response if the appointment with the given ID does not exist
+	            return ResponseEntity.notFound().build();
+	        }
+	    } catch (Exception ex) {
+	        // Handle any unexpected exceptions here
+	        // Log the error for debugging purposes
+	        LOGGER.info("An unexpected error occurred: " + ex.getMessage());
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+
+
 	/**
 	 * Retrieves a list of appointments for a specific doctor with the status
 	 * "Accepted".
@@ -68,8 +99,6 @@ public class AppointmentController {
 	 * @return ResponseEntity<List<Appointment>> A response containing a list of
 	 *         appointments.
 	 */
-//
-	
 	@GetMapping("/doctor/{doctorId}/Accepted")
 	public ResponseEntity<?> getAppointmentsByDoctorIdAndAccepted(
 	        @PathVariable("doctorId") long doctorId) {
@@ -201,7 +230,7 @@ public class AppointmentController {
 	 * @param status         The new status for the appointment.
 	 * @return ResponseEntity<String> A response indicating the success of the
 	 *         update operation.
-	 * @throws ProfileNotFoundException If no appointment is found with the given
+	 * @throws AppointmentNotFoundException If no appointment is found with the given
 	 *                                  ID.
 	 */
 	@PutMapping("updateappointment/{appointment_id}/update/{status}")
@@ -211,7 +240,7 @@ public class AppointmentController {
 	        LOGGER.info("In Controller - Updating appointment status for ID: " + appointment_id + " to: " + status);
 	        service.updateAppointmentStatus(appointment_id, status);
 	        return new ResponseEntity<>("Status Updated Successfully", HttpStatus.OK);
-	    } catch (ProfileNotFoundException e) {
+	    } catch (AppointmentNotFoundException e) {
 	        LOGGER.warning("ProfileNotFoundException occurred while updating appointment status for ID: " + appointment_id);
 	        
 	        // Return a ResponseEntity with a custom error message and a 404 Not Found status
