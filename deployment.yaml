@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onehealth-doctorappointment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: onehealth-doctorappointment
+  template:
+    metadata:
+      labels:
+        app: onehealth-doctorappointment
+    spec:
+      containers:
+      - name: onehealth-doctorappointment
+        image: yjb28/doctorappointment:v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onehealth-doctorappointment
+spec:
+  selector:
+    app: onehealth-doctorappointment
+  ports:
+  - name: tcp
+    port: 8080
+    targetPort: 8080
+    nodePort: 30018
+  type: LoadBalancer

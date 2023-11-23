@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import com.oneHealth.Appointments.entity.Appointment;
 import com.oneHealth.Appointments.exception.AppointmentNotFoundException;
+import com.oneHealth.Appointments.exception.DatabaseException;
 import com.oneHealth.Appointments.exception.RecordNotFoundException;
 import com.oneHealth.Appointments.service.AppointmentService;
+import java.util.HashMap;
 
 /**
  * The main class to start the OneHealth Doctor Appointment Services
@@ -70,8 +73,30 @@ public class AppointmentController {
 	 * @return ResponseEntity<Appointment> A response entity containing the appointment with the specified ID,
 	 *                                    or a 404 Not Found response if the appointment does not exist.
 	 */
+//	@GetMapping("/getAppointment/{appointment_id}")
+//	public ResponseEntity<Appointment> getAppointmentById(@PathVariable(value = "appointment_id") int appointment_id) {
+//	    try {
+//	        Appointment appointment = service.getAppointmentById(appointment_id);
+//
+//	        if (appointment != null) {
+//	            // Return a 200 OK response with the appointment object
+//	            return ResponseEntity.ok(appointment);
+//	        } else {
+//	            // Return a 404 Not Found response if the appointment with the given ID does not exist
+//	            return ResponseEntity.notFound().build();
+//	        }
+//	    } catch (Exception ex) {
+//	        // Handle any unexpected exceptions here
+//	        // Log the error for debugging purposes
+//	        LOGGER.info("An unexpected error occurred: " + ex.getMessage());
+//	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//	    }
+//	}
+//	
+	
+
 	@GetMapping("/getAppointment/{appointment_id}")
-	public ResponseEntity<Appointment> getAppointmentById(@PathVariable(value = "appointment_id") int appointment_id) {
+	public ResponseEntity<?> getAppointmentById(@PathVariable(value = "appointment_id") int appointment_id) throws AppointmentNotFoundException {
 	    try {
 	        Appointment appointment = service.getAppointmentById(appointment_id);
 
@@ -79,14 +104,37 @@ public class AppointmentController {
 	            // Return a 200 OK response with the appointment object
 	            return ResponseEntity.ok(appointment);
 	        } else {
-	            // Return a 404 Not Found response if the appointment with the given ID does not exist
-	            return ResponseEntity.notFound().build();
+	            // Return a 404 Not Found response with a custom message
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body("Appointment not found for ID: " + appointment_id);
 	        }
 	    } catch (Exception ex) {
 	        // Handle any unexpected exceptions here
 	        // Log the error for debugging purposes
 	        LOGGER.info("An unexpected error occurred: " + ex.getMessage());
-	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+	        // Return a 500 Internal Server Error response with a custom message
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	            .body("An unexpected error occurred while retrieving the appointment.");
+	    }
+	}
+
+
+	
+	@GetMapping("/getAllAppointments")
+	public ResponseEntity<List<Appointment>> getAllAppointments() {
+	    try {
+	        List<Appointment> appointmentList = service.getAllAppointments(); // Replace 'Appointment' with your actual appointment entity class
+	        LOGGER.info("In Controller - All Appointments Retrieved: " + appointmentList);
+	        return new ResponseEntity<>(appointmentList, HttpStatus.OK);
+	    } catch (DatabaseException ex) {
+	        // Handle DatabaseException here
+	    	LOGGER.info("Database error: " + ex.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    } catch (Exception ex) {
+	        // Handle other exceptions here
+	    	LOGGER.info("An error occurred: " + ex.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	    }
 	}
 
@@ -303,6 +351,7 @@ public class AppointmentController {
 	    try {
 	        LOGGER.info("In Controller - Deleting appointment with ID: " + appointment_id);
 	        service.deleteAppointment(appointment_id);
+	        
 	        return ResponseEntity.ok("Appointment Deleted Successfully");
 	    } catch (RecordNotFoundException e) {
 	        LOGGER.info("RecordNotFoundException occurred while deleting appointment with ID: " + appointment_id);

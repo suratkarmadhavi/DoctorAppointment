@@ -219,6 +219,10 @@ public interface AppointmentService
      */
     Appointment getAppointmentById(long appointment_id) throws RecordNotFoundException;
 
+
+
+	List<Appointment> getAllAppointments() throws Exception;
+
 	
 }
 

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.reactive.function.BodyInserters;
@@ -43,6 +43,10 @@ public class AppointmentServiceImplementation implements AppointmentService {
 
 	@Autowired
 	private WebClient.Builder builder;
+	
+	@Value("${apiGatewayUrl}")
+	private String apiGatewayUrl;
+
 
 	@Autowired
 	private ModelMapper mapper;
@@ -67,16 +71,17 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		}
 
 		// Fetch patient details using WebClient
-		Patient patientDto = builder.build().get().uri(
-				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/{patient_id}",
-				obj.getPatientId()).retrieve().bodyToMono(Patient.class).block();
+		Patient patientDto = builder.build().get()
+				.uri(apiGatewayUrl + "/patientProfile/{patient_id}", obj.getPatientId()).retrieve()
+				.bodyToMono(Patient.class).block();
 
 		System.out.println(patientDto);
 
 		// Fetch doctor profile using WebClient
-		DoctorProfile profile = builder.build().get().uri(
-				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
-				obj.getDoctorId()).retrieve().bodyToMono(DoctorProfile.class).block();
+		DoctorProfile profile = builder.build().get()
+				.uri(apiGatewayUrl + "/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
+						obj.getDoctorId())
+				.retrieve().bodyToMono(DoctorProfile.class).block();
 		System.out.println(profile);
 
 		// Create an AppointmentDTO and map relevant fields
@@ -91,10 +96,9 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		dto.setDoctor_email(profile.getEmail());
 
 		// Prepare and send appointment email using WebClient
-		WebClient.ResponseSpec responseSpec = builder
-				.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build()
-				.post().uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
-																								// request
+		WebClient.ResponseSpec responseSpec = builder.baseUrl(apiGatewayUrl + "/emailService").build().post()
+				.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
+																							// request
 
 		// Send the request and handle the response
 		responseSpec.toBodilessEntity().subscribe();
@@ -112,15 +116,16 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		}
 
 		// Fetch patient details using WebClient
-		Patient patientDto = builder.build().get().uri(
-				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/byPatientId/{patient_id}",
-				obj.getPatientId()).retrieve().bodyToMono(Patient.class).block();
+		Patient patientDto = builder.build().get()
+				.uri(apiGatewayUrl + "/patientProfile/byPatientId/{patient_id}", obj.getPatientId()).retrieve()
+				.bodyToMono(Patient.class).block();
 		System.out.println(patientDto);
 
 		// Fetch doctor profile using WebClient
-		DoctorProfile profile = builder.build().get().uri(
-				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
-				obj.getDoctorId()).retrieve().bodyToMono(DoctorProfile.class).block();
+		DoctorProfile profile = builder.build().get()
+				.uri(apiGatewayUrl + "/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
+						obj.getDoctorId())
+				.retrieve().bodyToMono(DoctorProfile.class).block();
 		System.out.println(profile);
 
 		// Create an AppointmentDTO and map relevant fields
@@ -135,10 +140,9 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		dto.setDoctor_email(profile.getEmail());
 
 		// Prepare and send appointment email using WebClient
-		WebClient.ResponseSpec responseSpec = builder
-				.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build()
-				.post().uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
-																								// request
+		WebClient.ResponseSpec responseSpec = builder.baseUrl(apiGatewayUrl + "/emailService").build().post()
+				.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
+																							// request
 
 		// Send the request and handle the response
 		responseSpec.toBodilessEntity().subscribe();
@@ -160,15 +164,16 @@ public class AppointmentServiceImplementation implements AppointmentService {
 //	        }
 
 		// Fetch patient details using WebClient
-		Patient patientDto = builder.build().get().uri(
-				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/patientProfile/byPatientId/{patient_id}",
-				obj.getPatientId()).retrieve().bodyToMono(Patient.class).block();
+		Patient patientDto = builder.build().get()
+				.uri(apiGatewayUrl + "/patientProfile/byPatientId/{patient_id}", obj.getPatientId()).retrieve()
+				.bodyToMono(Patient.class).block();
 		System.out.println(patientDto);
 
 		// Fetch doctor profile using WebClient
-		DoctorProfile profile = builder.build().get().uri(
-				"https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
-				obj.getDoctorId()).retrieve().bodyToMono(DoctorProfile.class).block();
+		DoctorProfile profile = builder.build().get()
+				.uri(apiGatewayUrl + "/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
+						obj.getDoctorId())
+				.retrieve().bodyToMono(DoctorProfile.class).block();
 		System.out.println(profile);
 
 		// Create an AppointmentDTO and map relevant fields
@@ -183,10 +188,9 @@ public class AppointmentServiceImplementation implements AppointmentService {
 		dto.setDoctor_email(profile.getEmail());
 
 		// Prepare and send appointment email using WebClient
-		WebClient.ResponseSpec responseSpec = builder
-				.baseUrl("https://apigateway-yjb28-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/emailService").build()
-				.post().uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
-																								// request
+		WebClient.ResponseSpec responseSpec = builder.baseUrl(apiGatewayUrl + "/emailService").build().post()
+				.uri("/appointmentEmail").body(BodyInserters.fromValue(dto)).retrieve(); // This prepares the
+																							// request
 
 		// Send the request and handle the response
 		responseSpec.toBodilessEntity().subscribe();
@@ -252,14 +256,14 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	 *
 	 * @param appointment_id The ID of the appointment.
 	 * @param newStatus      The new status to update.
-	 * @throws AppointmentNotFoundException If no appointment is found with the given
-	 *                                  ID.
+	 * @throws AppointmentNotFoundException If no appointment is found with the
+	 *                                      given ID.
 	 */
 	@Override
 	public void updateAppointmentStatus(long appointment_id, String newStatus) throws AppointmentNotFoundException {
 		LOGGER.info("In Service - Updating appointment status for ID: " + appointment_id + " to: " + newStatus);
-		Appointment appointment = repo.findById(appointment_id)
-				.orElseThrow(() -> new AppointmentNotFoundException("Appointment not found with ID: " + appointment_id));
+		Appointment appointment = repo.findById(appointment_id).orElseThrow(
+				() -> new AppointmentNotFoundException("Appointment not found with ID: " + appointment_id));
 
 		appointment.setStatus(newStatus);
 		repo.save(appointment);
@@ -287,22 +291,65 @@ public class AppointmentServiceImplementation implements AppointmentService {
 
 		return repo.save(appointment);
 	}
+//
+//	 @Override
+//	 public void deleteAppointment(long appointment_id) throws RecordNotFoundException {
+//			LOGGER.info("Deleting appointment with ID: " + appointment_id);
+//			Appointment obj = repo.findById(appointment_id)
+//					.orElseThrow(() -> new RecordNotFoundException("No Appointment Found with ID: " + appointment_id));
+//	 
+//			repo.delete(appointment);
+//	}
+	
+	 @Override
+	    public void deleteAppointment(long appointment_id) throws RecordNotFoundException {
+	        LOGGER.info("Deleting appointment with ID: " + appointment_id);
 
-	/**
-	 * Deletes an appointment by appointment ID.
-	 *
-	 * @param appointment_id The ID of the appointment to be deleted.
-	 * @throws RecordNotFoundException If no appointment is found with the given ID.
-	 */
-	@Override
-	public void deleteAppointment(long appointment_id) throws RecordNotFoundException {
-		LOGGER.info("Deleting appointment with ID: " + appointment_id);
-		Appointment appointment = repo.findById(appointment_id)
-				.orElseThrow(() -> new RecordNotFoundException("No Appointment Found with ID: " + appointment_id));
+	        Appointment obj = repo.findById(appointment_id)
+	                .orElseThrow(() -> new RecordNotFoundException("No Appointment Found with ID: " + appointment_id));
 
-		repo.delete(appointment);
-	}
+	        if (isDuplicateAppointmentExists(obj.getDoctorId(), obj.getAppointmentTime(), obj.getDate())) {
+	            throw new RuntimeException("Duplicate appointment found");
+	        }
 
+	        // Fetch patient details using WebClient
+	        Patient patientDto = builder.build().get()
+	                .uri(apiGatewayUrl + "/patientProfile/{patient_id}", obj.getPatientId()).retrieve()
+	                .bodyToMono(Patient.class).block();
+
+	        // Fetch doctor profile using WebClient
+	        DoctorProfile profile = builder.build().get()
+	                .uri(apiGatewayUrl + "/api/doctors/addressprofileregistration/getdoctorprofile/{doctor_id}",
+	                        obj.getDoctorId())
+	                .retrieve().bodyToMono(DoctorProfile.class).block();
+
+	        // Create an AppointmentDTO and map relevant fields
+	        AppointmentDTO dto = new AppointmentDTO();
+	        mapper.map(obj, dto);
+	        if (profile != null) {
+	            dto.setDoctor_name(profile.getFirst_name() + " " + profile.getLast_name());
+	            dto.setContact(profile.getContact());
+	            dto.setDoctor_email(profile.getEmail());
+	        }
+	        if (patientDto != null) {
+	            dto.setPatient_email(patientDto.getEmailId());
+	        }
+
+	        // Prepare and send appointment email using WebClient
+	        WebClient.ResponseSpec responseSpec = builder.baseUrl(apiGatewayUrl + "/emailService").build().post()
+	                .uri("/deleteappointmentEmail").body(BodyInserters.fromValue(dto)).retrieve();
+
+	        // Send the request and handle the response
+	        responseSpec.toBodilessEntity().subscribe();
+
+	        // Delete the appointment from the repository
+	        repo.delete(obj);
+	    }
+
+	  
+	
+	
+	
 	/**
 	 * Retrieves a list of appointments for the current day.
 	 *
@@ -625,47 +672,43 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	 */
 	@Override
 	public List<Appointment> getAppointmentTimeForSlots(long doctorId, Date date) {
-	    return repo.findByDoctorIdAndDate(doctorId, date);
+		return repo.findByDoctorIdAndDate(doctorId, date);
 	}
 
 	/**
-	 * Retrieves a list of upcoming appointments for a specific doctor based on the given status and type.
+	 * Retrieves a list of upcoming appointments for a specific doctor based on the
+	 * given status and type.
 	 *
-	 * @param doctorId The ID of the doctor for whom upcoming appointments are retrieved.
-	 * @param type     The type of appointments to retrieve (e.g., "regular" or "special").
-	 * @param status   The status of appointments to retrieve (e.g., "scheduled" or "confirmed").
+	 * @param doctorId The ID of the doctor for whom upcoming appointments are
+	 *                 retrieved.
+	 * @param type     The type of appointments to retrieve (e.g., "regular" or
+	 *                 "special").
+	 * @param status   The status of appointments to retrieve (e.g., "scheduled" or
+	 *                 "confirmed").
 	 * @return List<Appointment> A list of upcoming appointments.
-	 * @throws RecordNotFoundException if no upcoming appointments are found for the specified criteria.
+	 * @throws RecordNotFoundException if no upcoming appointments are found for the
+	 *                                 specified criteria.
 	 */
-	public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(
-	    long doctorId,
-	    String type,
-	    String status
-	) throws RecordNotFoundException {
-	    Date todayDate = Date.valueOf(LocalDate.now());
-	    LOGGER.info("Doctor ID: " + doctorId);
-	    LOGGER.info("Type: " + type);
-	    LOGGER.info("Status: " + status);
-	    LOGGER.info("Today's Date: " + todayDate);
+	public List<Appointment> getUpcomingAppointmentsByDoctorIdAndStatusAndType(long doctorId, String type,
+			String status) throws RecordNotFoundException {
+		Date todayDate = Date.valueOf(LocalDate.now());
+		LOGGER.info("Doctor ID: " + doctorId);
+		LOGGER.info("Type: " + type);
+		LOGGER.info("Status: " + status);
+		LOGGER.info("Today's Date: " + todayDate);
 
-	    List<Appointment> upcomingAppointments = repo.findAllAppointmentsByDoctorIdAndTypeAndStatusAndDate(
-	        doctorId,
-	        type,
-	        status,
-	        todayDate
-	    );
+		List<Appointment> upcomingAppointments = repo.findAllAppointmentsByDoctorIdAndTypeAndStatusAndDate(doctorId,
+				type, status, todayDate);
 
-	    if (upcomingAppointments.isEmpty()) {
-	        LOGGER.warning("In Service - No upcoming appointments found for Doctor ID: " + doctorId +
-	            " with status: "  + status + " and type: " + type);
-	        throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId +
-	            " with status: "  + status + " and type: " + type);
-	    }
+		if (upcomingAppointments.isEmpty()) {
+			LOGGER.warning("In Service - No upcoming appointments found for Doctor ID: " + doctorId + " with status: "
+					+ status + " and type: " + type);
+			throw new RecordNotFoundException("No upcoming appointments found for Doctor ID: " + doctorId
+					+ " with status: " + status + " and type: " + type);
+		}
 
-	    return upcomingAppointments;
+		return upcomingAppointments;
 	}
-	
-	
 
 	/**
 	 * Retrieves an appointment by its ID.
@@ -676,17 +719,22 @@ public class AppointmentServiceImplementation implements AppointmentService {
 	 */
 	@Override
 	public Appointment getAppointmentById(long appointment_id) throws RecordNotFoundException {
-	    Appointment appointment = repo.findById(appointment_id)
-	            .orElseThrow(() -> new RecordNotFoundException("No Appointment Found with this ID " + appointment_id));
-	    LOGGER.info("In Service - Appointment Retrieved: " + appointment);
-	    return appointment;
+		Appointment appointment = repo.findById(appointment_id)
+				.orElseThrow(() -> new RecordNotFoundException("No Appointment Found with this ID " + appointment_id));
+		LOGGER.info("In Service - Appointment Retrieved: " + appointment);
+		return appointment;
 	}
 
-		
-
-	   
-
-	
+	@Override
+	public List<Appointment> getAllAppointments() throws RecordNotFoundException {
+	    List<Appointment> appointments = repo.findAll(); // Replace 'appointmentRepository' with your actual repository or service
+	    
+	    if (appointments.isEmpty()) {
+	        throw new RecordNotFoundException("No appointments found.");
+	    }
+	    
+	    return appointments;
+	}
 
 
 }
